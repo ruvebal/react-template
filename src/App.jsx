@@ -6,18 +6,35 @@ import ClearCompletedButton from "./components/ClearCompletedButton";
 function App() {
   // ESTADO: La lista de tareas (esta es la memoria de nuestra app)
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Aprender fundamentos de React", completed: false },
-    { id: 2, text: "Construir una app de tareas", completed: false },
+    {
+      id: 1,
+      text: "Aprender fundamentos de React",
+      completed: false,
+      priority: "alta",
+    },
+    {
+      id: 2,
+      text: "Construir una app de tareas",
+      completed: false,
+      priority: "media",
+    },
+    {
+      id: 3,
+      text: "¡Diviértete con React!",
+      completed: false,
+      priority: "baja",
+    },
   ]);
 
   // FUNCIÓN: Añadir una nueva tarea
-  const addTask = (text) => {
+  const addTask = (text, priority = "media") => {
     const newTask = {
-      id: Date.now(), // ID único simple
+      id: Date.now(),
       text: text,
       completed: false,
+      priority: priority, // 🆕 Usar la prioridad recibida
     };
-    setTasks([...tasks, newTask]); // Añadir a las tareas existentes
+    setTasks([...tasks, newTask]);
   };
 
   // FUNCIÓN: Eliminar una tarea
@@ -48,7 +65,11 @@ function App() {
 
         <AddTaskInput onAdd={addTask} />
 
-        <TaskList tasks={tasks} onRemove={removeTask} onToggle={toggleTask} />
+        <TaskList
+          tasks={tasks}
+          onRemoveTask={removeTask}
+          onToggleTask={toggleTask}
+        />
 
         <ClearCompletedButton
           count={tasks.filter((t) => t.completed).length}

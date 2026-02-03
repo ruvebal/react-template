@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 
 // Componente presentacional para el botón "Limpiar completadas"
 // Props:
