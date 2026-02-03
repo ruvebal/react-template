@@ -110,12 +110,12 @@ react-template/
 ```jsx
 // Estructura del estado en App.jsx
 const [tasks, setTasks] = useState([
-	{
-		id: 1,
-		text: 'Aprender fundamentos de React',
-		completed: false,
-	},
-	// ...más tareas
+  {
+    id: 1,
+    text: "Aprender fundamentos de React",
+    completed: false,
+  },
+  // ...más tareas
 ]);
 ```
 
@@ -157,7 +157,9 @@ Mostrar el botón solo cuando tiene sentido:
 
 ```jsx
 {
-	tasks.some((t) => t.completed) && <button onClick={clearCompleted}>Limpiar completadas</button>;
+  tasks.some((t) => t.completed) && (
+    <button onClick={clearCompleted}>Limpiar completadas</button>
+  );
 }
 ```
 
@@ -172,7 +174,7 @@ Mostrar el botón solo cuando tiene sentido:
 ```jsx
 // FUNCIÓN: Eliminar todas las tareas completadas
 const clearCompleted = () => {
-	setTasks(tasks.filter((task) => !task.completed));
+  setTasks(tasks.filter((task) => !task.completed));
 };
 ```
 
@@ -188,19 +190,20 @@ const clearCompleted = () => {
 
 ```jsx
 {
-	/* Botón para limpiar completadas (solo visible si hay alguna) */
+  /* Botón para limpiar completadas (solo visible si hay alguna) */
 }
 {
-	tasks.some((t) => t.completed) && (
-		<div className="mt-4 text-center">
-			<button
-				onClick={clearCompleted}
-				className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600
-                 transition-colors shadow-md hover:shadow-lg">
-				🗑️ Limpiar completadas
-			</button>
-		</div>
-	);
+  tasks.some((t) => t.completed) && (
+    <div className="mt-4 text-center">
+      <button
+        onClick={clearCompleted}
+        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600
+                 transition-colors shadow-md hover:shadow-lg"
+      >
+        🗑️ Limpiar completadas
+      </button>
+    </div>
+  );
 }
 ```
 
@@ -213,12 +216,69 @@ const clearCompleted = () => {
 - `shadow-md`: Sombra mediana
 - `hover:shadow-lg`: Sombra más grande al hover (efecto 3D)
 
+#### Paso 1.2b: Extraer el botón a un componente reutilizable
+
+En lugar de dejar el markup del botón directamente en `App.jsx`, podemos extraerlo a un componente dentro de `src/components` para mejorar la legibilidad y la reutilización.
+
+- Archivo sugerido: `src/components/ClearCompletedButton.jsx`
+
+Ejemplo de componente:
+
+```jsx
+import React from "react";
+
+// Componente presentacional para el botón "Limpiar completadas"
+// Props:
+// - count: número de tareas completadas (si es 0, no renderiza nada)
+// - onClear: función que ejecuta la limpieza
+function ClearCompletedButton({ count = 0, onClear }) {
+  if (!count) return null; // No mostrar si no hay completadas
+
+  return (
+    <div className="mt-4 text-center">
+      <button
+        onClick={onClear}
+        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-md hover:shadow-lg"
+      >
+        🗑️ Limpiar {count} completada{count > 1 ? "s" : ""}
+      </button>
+    </div>
+  );
+}
+
+export default ClearCompletedButton;
+```
+
+Ejemplo de uso en `App.jsx` (reemplaza el bloque del botón):
+
+```jsx
+import ClearCompletedButton from "./components/ClearCompletedButton";
+
+// ...existing code...
+
+// Dentro del return, después de <TaskList />
+<ClearCompletedButton
+  count={tasks.filter((t) => t.completed).length}
+  onClear={clearCompleted}
+/>;
+
+// ...existing code...
+```
+
+Ventajas de extraer el componente:
+
+- Mejora la separación de responsabilidades (UI vs lógica de estado)
+- Facilita pruebas y reutilización
+- Permite añadir comportamientos adicionales (confirmaciones, animaciones) sin ensuciar `App.jsx`
+
 #### Paso 1.3: Mejorar el feedback visual (opcional)
 
 Añadir un contador de tareas completadas al botón:
 
 ```jsx
-<button onClick={clearCompleted}>🗑️ Limpiar {tasks.filter((t) => t.completed).length} completadas</button>
+<button onClick={clearCompleted}>
+  🗑️ Limpiar {tasks.filter((t) => t.completed).length} completadas
+</button>
 ```
 
 ### ✅ Criterios de Aceptación
@@ -314,18 +374,18 @@ className={priorityColors[task.priority]}
 
 ```jsx
 const [tasks, setTasks] = useState([
-	{
-		id: 1,
-		text: 'Aprender fundamentos de React',
-		completed: false,
-		priority: 'alta', // 🆕 Añadir prioridad
-	},
-	{
-		id: 2,
-		text: 'Construir una app de tareas',
-		completed: false,
-		priority: 'media', // 🆕
-	},
+  {
+    id: 1,
+    text: "Aprender fundamentos de React",
+    completed: false,
+    priority: "alta", // 🆕 Añadir prioridad
+  },
+  {
+    id: 2,
+    text: "Construir una app de tareas",
+    completed: false,
+    priority: "media", // 🆕
+  },
 ]);
 ```
 
@@ -335,13 +395,13 @@ Añadir una prioridad por defecto al crear tareas:
 
 ```jsx
 const addTask = (text) => {
-	const newTask = {
-		id: Date.now(),
-		text: text,
-		completed: false,
-		priority: 'media', // 🆕 Prioridad por defecto
-	};
-	setTasks([...tasks, newTask]);
+  const newTask = {
+    id: Date.now(),
+    text: text,
+    completed: false,
+    priority: "media", // 🆕 Prioridad por defecto
+  };
+  setTasks([...tasks, newTask]);
 };
 ```
 
@@ -350,58 +410,62 @@ const addTask = (text) => {
 **Actualización del componente:**
 
 ```jsx
-import { useState } from 'react';
+import { useState } from "react";
 
 function AddTaskInput({ onAdd }) {
-	const [input, setInput] = useState('');
-	const [priority, setPriority] = useState('media'); // 🆕 Estado para prioridad
+  const [input, setInput] = useState("");
+  const [priority, setPriority] = useState("media"); // 🆕 Estado para prioridad
 
-	const handleSubmit = () => {
-		if (input.trim()) {
-			onAdd(input, priority); // 🆕 Pasar la prioridad
-			setInput('');
-			setPriority('media'); // Reset a prioridad media
-		}
-	};
+  const handleSubmit = () => {
+    if (input.trim()) {
+      onAdd(input, priority); // 🆕 Pasar la prioridad
+      setInput("");
+      setPriority("media"); // Reset a prioridad media
+    }
+  };
 
-	return (
-		<div className="bg-white rounded-lg shadow-md p-4 mb-6">
-			<div className="flex gap-2 mb-2">
-				<input
-					type="text"
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-					onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-					placeholder="¿Qué necesitas hacer?"
-					className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
+  return (
+    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="flex gap-2 mb-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
+          placeholder="¿Qué necesitas hacer?"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
                      focus:ring-2 focus:ring-indigo-500"
-				/>
-				<button
-					onClick={handleSubmit}
-					className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700
-                     transition-colors font-medium">
-					Añadir
-				</button>
-			</div>
+        />
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700
+                     transition-colors font-medium"
+        >
+          Añadir
+        </button>
+      </div>
 
-			{/* 🆕 Selector de prioridad */}
-			<div className="flex items-center gap-2 text-sm">
-				<span className="text-gray-600 font-medium">Prioridad:</span>
-				<div className="flex gap-2">
-					{['baja', 'media', 'alta'].map((p) => (
-						<button
-							key={p}
-							onClick={() => setPriority(p)}
-							className={`px-3 py-1 rounded-full transition-all ${
-								priority === p ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-							}`}>
-							{p.charAt(0).toUpperCase() + p.slice(1)}
-						</button>
-					))}
-				</div>
-			</div>
-		</div>
-	);
+      {/* 🆕 Selector de prioridad */}
+      <div className="flex items-center gap-2 text-sm">
+        <span className="text-gray-600 font-medium">Prioridad:</span>
+        <div className="flex gap-2">
+          {["baja", "media", "alta"].map((p) => (
+            <button
+              key={p}
+              onClick={() => setPriority(p)}
+              className={`px-3 py-1 rounded-full transition-all ${
+                priority === p
+                  ? "bg-indigo-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {p.charAt(0).toUpperCase() + p.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default AddTaskInput;
@@ -418,14 +482,14 @@ export default AddTaskInput;
 Modificar la función `addTask`:
 
 ```jsx
-const addTask = (text, priority = 'media') => {
-	const newTask = {
-		id: Date.now(),
-		text: text,
-		completed: false,
-		priority: priority, // 🆕 Usar la prioridad recibida
-	};
-	setTasks([...tasks, newTask]);
+const addTask = (text, priority = "media") => {
+  const newTask = {
+    id: Date.now(),
+    text: text,
+    completed: false,
+    priority: priority, // 🆕 Usar la prioridad recibida
+  };
+  setTasks([...tasks, newTask]);
 };
 ```
 
@@ -435,55 +499,62 @@ Mostrar la prioridad con colores:
 
 ```jsx
 function TaskItem({ task, onRemove, onToggle }) {
-	// 🆕 Mapeo de prioridades a colores
-	const priorityStyles = {
-		baja: 'border-l-4 border-green-500 bg-green-50',
-		media: 'border-l-4 border-yellow-500 bg-yellow-50',
-		alta: 'border-l-4 border-red-500 bg-red-50',
-	};
+  // 🆕 Mapeo de prioridades a colores
+  const priorityStyles = {
+    baja: "border-l-4 border-green-500 bg-green-50",
+    media: "border-l-4 border-yellow-500 bg-yellow-50",
+    alta: "border-l-4 border-red-500 bg-red-50",
+  };
 
-	// 🆕 Iconos para cada prioridad
-	const priorityIcons = {
-		baja: '🟢',
-		media: '🟡',
-		alta: '🔴',
-	};
+  // 🆕 Iconos para cada prioridad
+  const priorityIcons = {
+    baja: "🟢",
+    media: "🟡",
+    alta: "🔴",
+  };
 
-	return (
-		<div
-			className={`rounded-lg shadow-sm p-4 flex items-center gap-3 hover:shadow-md
-                     transition-shadow ${priorityStyles[task.priority]}`}>
-			<input
-				type="checkbox"
-				checked={task.completed}
-				onChange={() => onToggle(task.id)}
-				className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
-			/>
+  return (
+    <div
+      className={`rounded-lg shadow-sm p-4 flex items-center gap-3 hover:shadow-md
+                     transition-shadow ${priorityStyles[task.priority]}`}
+    >
+      <input
+        type="checkbox"
+        checked={task.completed}
+        onChange={() => onToggle(task.id)}
+        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+      />
 
-			<span className="text-xs">{priorityIcons[task.priority]}</span>
+      <span className="text-xs">{priorityIcons[task.priority]}</span>
 
-			<span className={`flex-1 ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>{task.text}</span>
+      <span
+        className={`flex-1 ${task.completed ? "line-through text-gray-400" : "text-gray-800"}`}
+      >
+        {task.text}
+      </span>
 
-			{/* 🆕 Badge de prioridad */}
-			<span
-				className={`text-xs px-2 py-1 rounded-full font-medium ${
-					task.priority === 'alta'
-						? 'bg-red-200 text-red-800'
-						: task.priority === 'media'
-						? 'bg-yellow-200 text-yellow-800'
-						: 'bg-green-200 text-green-800'
-				}`}>
-				{task.priority}
-			</span>
+      {/* 🆕 Badge de prioridad */}
+      <span
+        className={`text-xs px-2 py-1 rounded-full font-medium ${
+          task.priority === "alta"
+            ? "bg-red-200 text-red-800"
+            : task.priority === "media"
+              ? "bg-yellow-200 text-yellow-800"
+              : "bg-green-200 text-green-800"
+        }`}
+      >
+        {task.priority}
+      </span>
 
-			<button
-				onClick={() => onRemove(task.id)}
-				className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600
-                   transition-colors">
-				Eliminar
-			</button>
-		</div>
-	);
+      <button
+        onClick={() => onRemove(task.id)}
+        className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600
+                   transition-colors"
+      >
+        Eliminar
+      </button>
+    </div>
+  );
 }
 
 export default TaskItem;
@@ -504,17 +575,19 @@ En `App.jsx`, ordenar antes de renderizar:
 // 🆕 Función helper para ordenar por prioridad
 const priorityOrder = { alta: 1, media: 2, baja: 3 };
 
-const sortedTasks = [...tasks].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+const sortedTasks = [...tasks].sort(
+  (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+);
 
 return (
-	<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-		{/* ... */}
-		<TaskList
-			tasks={sortedTasks} // 🆕 Pasar tareas ordenadas
-			onRemove={removeTask}
-			onToggle={toggleTask}
-		/>
-	</div>
+  <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    {/* ... */}
+    <TaskList
+      tasks={sortedTasks} // 🆕 Pasar tareas ordenadas
+      onRemove={removeTask}
+      onToggle={toggleTask}
+    />
+  </div>
 );
 ```
 
@@ -594,13 +667,13 @@ ENTREGABLE:
 
 ```jsx
 useEffect(() => {
-	// Código que se ejecuta después del render
-	console.log('Componente renderizado');
+  // Código que se ejecuta después del render
+  console.log("Componente renderizado");
 
-	// Opcionalmente, devolver función de limpieza
-	return () => {
-		console.log('Componente desmontado');
-	};
+  // Opcionalmente, devolver función de limpieza
+  return () => {
+    console.log("Componente desmontado");
+  };
 }, [dependencias]); // Array de dependencias
 ```
 
@@ -620,13 +693,13 @@ El navegador proporciona `localStorage` para guardar datos persistentes:
 
 ```javascript
 // Guardar
-localStorage.setItem('clave', 'valor'); // Solo acepta strings
+localStorage.setItem("clave", "valor"); // Solo acepta strings
 
 // Leer
-const valor = localStorage.getItem('clave'); // Devuelve string o null
+const valor = localStorage.getItem("clave"); // Devuelve string o null
 
 // Eliminar
-localStorage.removeItem('clave');
+localStorage.removeItem("clave");
 
 // Limpiar todo
 localStorage.clear();
@@ -636,10 +709,10 @@ localStorage.clear();
 
 ```javascript
 // Guardar objeto
-localStorage.setItem('tasks', JSON.stringify(tasks));
+localStorage.setItem("tasks", JSON.stringify(tasks));
 
 // Leer objeto
-const tasks = JSON.parse(localStorage.getItem('tasks'));
+const tasks = JSON.parse(localStorage.getItem("tasks"));
 ```
 
 ### 📋 Pasos de Implementación
@@ -649,34 +722,44 @@ const tasks = JSON.parse(localStorage.getItem('tasks'));
 **Ubicación:** En `App.jsx`, modificar el `useState`:
 
 ```jsx
-import { useState, useEffect } from 'react'; // 🆕 Importar useEffect
+import { useState, useEffect } from "react"; // 🆕 Importar useEffect
 
 function App() {
-	// 🆕 Función para obtener tareas iniciales
-	const getInitialTasks = () => {
-		try {
-			const savedTasks = localStorage.getItem('tasks');
+  // 🆕 Función para obtener tareas iniciales
+  const getInitialTasks = () => {
+    try {
+      const savedTasks = localStorage.getItem("tasks");
 
-			// Si hay tareas guardadas, parsearlas
-			if (savedTasks) {
-				return JSON.parse(savedTasks);
-			}
-		} catch (error) {
-			// Si hay error al parsear, usar tareas por defecto
-			console.error('Error al cargar tareas:', error);
-		}
+      // Si hay tareas guardadas, parsearlas
+      if (savedTasks) {
+        return JSON.parse(savedTasks);
+      }
+    } catch (error) {
+      // Si hay error al parsear, usar tareas por defecto
+      console.error("Error al cargar tareas:", error);
+    }
 
-		// Tareas por defecto si no hay nada guardado
-		return [
-			{ id: 1, text: 'Aprender fundamentos de React', completed: false, priority: 'alta' },
-			{ id: 2, text: 'Construir una app de tareas', completed: false, priority: 'media' },
-		];
-	};
+    // Tareas por defecto si no hay nada guardado
+    return [
+      {
+        id: 1,
+        text: "Aprender fundamentos de React",
+        completed: false,
+        priority: "alta",
+      },
+      {
+        id: 2,
+        text: "Construir una app de tareas",
+        completed: false,
+        priority: "media",
+      },
+    ];
+  };
 
-	// 🆕 Usar función lazy initialization
-	const [tasks, setTasks] = useState(getInitialTasks);
+  // 🆕 Usar función lazy initialization
+  const [tasks, setTasks] = useState(getInitialTasks);
 
-	// ... resto del código
+  // ... resto del código
 }
 ```
 
@@ -693,12 +776,12 @@ Añadir el `useEffect` después del `useState`:
 ```jsx
 // 🆕 EFECTO: Guardar tareas en localStorage cada vez que cambien
 useEffect(() => {
-	try {
-		localStorage.setItem('tasks', JSON.stringify(tasks));
-		console.log('✅ Tareas guardadas en localStorage:', tasks.length);
-	} catch (error) {
-		console.error('❌ Error al guardar tareas:', error);
-	}
+  try {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    console.log("✅ Tareas guardadas en localStorage:", tasks.length);
+  } catch (error) {
+    console.error("❌ Error al guardar tareas:", error);
+  }
 }, [tasks]); // 🔑 Dependencia: se ejecuta cada vez que tasks cambie
 ```
 
@@ -714,48 +797,49 @@ useEffect(() => {
 Mostrar un indicador temporal cuando se guarden las tareas:
 
 ```jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 function App() {
-	const [tasks, setTasks] = useState(getInitialTasks);
-	const [savedIndicator, setSavedIndicator] = useState(false); // 🆕
+  const [tasks, setTasks] = useState(getInitialTasks);
+  const [savedIndicator, setSavedIndicator] = useState(false); // 🆕
 
-	// Guardar en localStorage
-	useEffect(() => {
-		try {
-			localStorage.setItem('tasks', JSON.stringify(tasks));
+  // Guardar en localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
 
-			// 🆕 Mostrar indicador de guardado
-			setSavedIndicator(true);
+      // 🆕 Mostrar indicador de guardado
+      setSavedIndicator(true);
 
-			// 🆕 Ocultar después de 2 segundos
-			const timer = setTimeout(() => {
-				setSavedIndicator(false);
-			}, 2000);
+      // 🆕 Ocultar después de 2 segundos
+      const timer = setTimeout(() => {
+        setSavedIndicator(false);
+      }, 2000);
 
-			// 🆕 Cleanup: cancelar timer si el componente se desmonta
-			return () => clearTimeout(timer);
-		} catch (error) {
-			console.error('Error al guardar:', error);
-		}
-	}, [tasks]);
+      // 🆕 Cleanup: cancelar timer si el componente se desmonta
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error("Error al guardar:", error);
+    }
+  }, [tasks]);
 
-	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-			<div className="max-w-2xl mx-auto">
-				{/* 🆕 Indicador de guardado */}
-				{savedIndicator && (
-					<div
-						className="mb-4 p-2 bg-green-100 border border-green-300 text-green-800
-                          rounded-lg text-center text-sm animate-pulse">
-						✅ Cambios guardados automáticamente
-					</div>
-				)}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        {/* 🆕 Indicador de guardado */}
+        {savedIndicator && (
+          <div
+            className="mb-4 p-2 bg-green-100 border border-green-300 text-green-800
+                          rounded-lg text-center text-sm animate-pulse"
+          >
+            ✅ Cambios guardados automáticamente
+          </div>
+        )}
 
-				{/* ... resto del JSX */}
-			</div>
-		</div>
-	);
+        {/* ... resto del JSX */}
+      </div>
+    </div>
+  );
 }
 ```
 
@@ -773,17 +857,24 @@ Para pruebas, añadir un botón que borre localStorage:
 ```jsx
 // 🆕 Función para resetear la aplicación
 const resetApp = () => {
-	if (window.confirm('⚠️ ¿Seguro que quieres eliminar todas las tareas? Esta acción no se puede deshacer.')) {
-		localStorage.removeItem('tasks');
-		setTasks([]);
-	}
+  if (
+    window.confirm(
+      "⚠️ ¿Seguro que quieres eliminar todas las tareas? Esta acción no se puede deshacer.",
+    )
+  ) {
+    localStorage.removeItem("tasks");
+    setTasks([]);
+  }
 };
 
 // En el JSX, añadir al final:
 <div className="mt-4 text-center">
-	<button onClick={resetApp} className="text-sm text-gray-500 hover:text-red-600 underline">
-		🗑️ Resetear aplicación (borrar todo)
-	</button>
+  <button
+    onClick={resetApp}
+    className="text-sm text-gray-500 hover:text-red-600 underline"
+  >
+    🗑️ Resetear aplicación (borrar todo)
+  </button>
 </div>;
 ```
 
