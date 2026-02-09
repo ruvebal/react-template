@@ -13,13 +13,19 @@
 - [Fase 1: Botón "Limpiar Completadas"](#-fase-1-botón-limpiar-completadas)
 - [Fase 2: Sistema de Prioridades](#-fase-2-sistema-de-prioridades)
 - [Fase 3: Persistencia con localStorage](#-fase-3-persistencia-con-localstorage)
+- [Bloque Hooks: Lección asociada](#-bloque-hooks-lección-asociada)
+- [Fase 4: Custom hook useLocalStorage](#-fase-4-custom-hook-uselocalstorage)
+- [Fase 5: useDebounce y búsqueda de tareas](#-fase-5-usedebounce-y-búsqueda-de-tareas)
+- [Fase 6: useRef y useToggle](#-fase-6-useref-y-usetoggle)
+- [Fase 7: useMemo y useCallback (optimización)](#-fase-7-usememo-y-usecallback-optimización)
+- [Resumen de Conceptos por Fase](#-resumen-de-conceptos-por-fase)
 - [Recursos Adicionales](#-recursos-adicionales)
 
 ---
 
 ## 🎯 Visión General
 
-Este documento describe la implementación de **tres ejercicios progresivos** para una aplicación de gestión de tareas en React. Cada ejercicio introduce nuevos conceptos y patrones fundamentales de React.
+Este documento describe la implementación de **ejercicios progresivos** para una aplicación de gestión de tareas en React: **Fases 1–3** (fundamentos) y **Fases 4–7** (dominio de hooks), alineados con la lección **Dominio de hooks** (ruta en [Bloque Hooks](#-bloque-hooks-lección-asociada)).
 
 ### Objetivos de Aprendizaje Globales
 
@@ -29,6 +35,9 @@ Este documento describe la implementación de **tres ejercicios progresivos** pa
 4. **Renderizado condicional** y estilos dinámicos
 5. **Persistencia de datos** en el navegador
 6. **Patrones de inmutabilidad** en JavaScript
+7. **Custom hooks** reutilizables (`useLocalStorage`, `useDebounce`, `useToggle`)
+8. **useRef** para referencias al DOM y valores mutables
+9. **useMemo** y **useCallback** para optimización (con criterio)
 
 ### Prerrequisitos
 
@@ -41,17 +50,21 @@ Este documento describe la implementación de **tres ejercicios progresivos** pa
 
 ## 🧩 Conceptos React Cubiertos
 
-| Concepto                              | Fase 1 | Fase 2 | Fase 3 |
-| ------------------------------------- | ------ | ------ | ------ |
-| Virtual DOM (vDOM) - Fundamentos      | ✅     | ✅     | ✅     |
-| `useState` - Estado básico            | ✅     | ✅     | ✅     |
-| Actualización inmutable del estado    | ✅     | ✅     | ✅     |
-| Props y comunicación componente-padre | ✅     | ✅     | ✅     |
-| Renderizado condicional               | ✅     | ✅     | ✅     |
-| Estilos dinámicos con clases CSS      | -      | ✅     | -      |
-| `useEffect` - Efectos secundarios     | -      | -      | ✅     |
-| Sincronización con APIs externas      | -      | -      | ✅     |
-| Serialización JSON                    | -      | -      | ✅     |
+| Concepto                              | F1  | F2  | F3  | F4  | F5  | F6  | F7  |
+| ------------------------------------- | --- | --- | --- | --- | --- | --- | --- |
+| Virtual DOM (vDOM) - Fundamentos      | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| `useState` - Estado básico            | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Actualización inmutable del estado    | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Props y comunicación componente-padre | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Renderizado condicional               | ✅  | ✅  | ✅  | -   | ✅  | ✅  | -   |
+| Estilos dinámicos con clases CSS      | -   | ✅  | -   | -   | -   | -   | -   |
+| `useEffect` - Efectos secundarios     | -   | -   | ✅  | ✅  | ✅  | -   | -   |
+| Sincronización con APIs externas      | -   | -   | ✅  | ✅  | -   | -   | -   |
+| Serialización JSON                    | -   | -   | ✅  | ✅  | -   | -   | -   |
+| **Custom hooks**                      | -   | -   | -   | ✅  | ✅  | ✅  | -   |
+| `useRef`                              | -   | -   | -   | -   | -   | ✅  | -   |
+| `useMemo` / `useCallback`             | -   | -   | -   | -   | -   | -   | ✅  |
+| Cleanup en efectos                    | -   | -   | -   | -   | ✅  | -   | -   |
 
 ---
 
@@ -866,17 +879,341 @@ ENTREGABLE:
 
 ---
 
+## 🪝 Bloque Hooks: Lección asociada
+
+Las **Fases 4–7** extienden la lista de tareas para practicar el contenido de la lección **Dominio de hooks**.
+
+| Recurso                       | En línea                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Lección: Dominio de hooks** | [lessons/es/react/react-hooks/](https://ruvebal.github.io/web-atelier-udit/lessons/es/react/react-hooks/)     |
+| **Plan (este doc)**           | [plan-ejercicios-react.md](https://github.com/ruvebal/react-template/blob/main/docs/plan-ejercicios-react.md) |
+
+### Objetivos del bloque (alineados con la lección)
+
+- Extraer lógica reutilizable en **custom hooks** (`useLocalStorage`, `useDebounce`, `useToggle`).
+- Usar **useRef** para acceso al DOM (focus del input) y valores que no disparan re-render.
+- Aplicar **useEffect** con **cleanup** (timers, suscripciones).
+- Introducir **useMemo** y **useCallback** con criterio (evitar optimización prematura).
+- Evitar pitfalls: closures obsoletos, bucles infinitos, dependencias incorrectas.
+
+### Orden recomendado
+
+1. Leer la lección (al menos secciones de custom hooks, useRef, useMemo/useCallback).
+2. Implementar Fase 4 → 5 → 6 → 7 sobre la app ya construida en Fases 1–3.
+
+---
+
+## 🗃️ Fase 4: Custom hook useLocalStorage
+
+### 🎓 Objetivos de aprendizaje
+
+- Extraer la persistencia en localStorage a un **custom hook** reutilizable.
+- Reutilizar el mismo patrón en otras partes de la app (p. ej. tema, preferencias).
+- Practicar **lazy initialization** y setter que persiste.
+
+### 🧠 Conceptos (lección asociada)
+
+- Custom hooks: reglas (solo en top-level y en componentes/hooks), convención `use*`.
+- Encapsular estado + efecto en un hook que devuelve `[value, setValue]`.
+
+### 📋 Pasos de implementación
+
+#### Paso 4.1: Crear `src/hooks/useLocalStorage.js`
+
+```jsx
+// hooks/useLocalStorage.js
+import { useState, useEffect } from 'react';
+
+/**
+ * Hook que sincroniza un valor con localStorage.
+ * @param {string} key - Clave en localStorage
+ * @param {T} initialValue - Valor si no hay nada guardado
+ * @returns {[T, (value: T | ((prev: T) => T)) => void]}
+ */
+export function useLocalStorage(key, initialValue) {
+	const [storedValue, setStoredValue] = useState(() => {
+		try {
+			const item = window.localStorage.getItem(key);
+			return item ? JSON.parse(item) : initialValue;
+		} catch (error) {
+			console.error(`Error reading localStorage key "${key}":`, error);
+			return initialValue;
+		}
+	});
+
+	const setValue = (value) => {
+		try {
+			const valueToStore = value instanceof Function ? value(storedValue) : value;
+			setStoredValue(valueToStore);
+			window.localStorage.setItem(key, JSON.stringify(valueToStore));
+		} catch (error) {
+			console.error(`Error setting localStorage key "${key}":`, error);
+		}
+	};
+
+	return [storedValue, setValue];
+}
+```
+
+#### Paso 4.2: Refactorizar `App.jsx`
+
+Sustituir el `useState` + `useEffect` de tareas por:
+
+```jsx
+const [tasks, setTasks] = useLocalStorage('tasks', [
+	{ id: 1, text: 'Aprender fundamentos de React', completed: false, priority: 'alta' },
+	{ id: 2, text: 'Construir una app de tareas', completed: false, priority: 'media' },
+]);
+```
+
+Eliminar `getInitialTasks` y el `useEffect` que guardaba en localStorage.
+
+### ✅ Criterios de aceptación
+
+- [ ] Existe `src/hooks/useLocalStorage.js` y se usa en `App.jsx`.
+- [ ] Las tareas siguen persistiendo al recargar.
+- [ ] No queda lógica duplicada de localStorage en `App.jsx`.
+
+### 📝 Prompt para implementación
+
+```
+Implementa la Fase 4 del plan ubicado en:
+/Users/ruvebal/projects/ruvebal/scholar/udit/courses-repos/react-template/docs/plan-ejercicios-react.md
+
+TAREA: Extraer la persistencia de tareas a un custom hook useLocalStorage.
+
+REQUISITOS:
+1. Crear src/hooks/useLocalStorage.js con la firma [value, setValue]
+2. Soporte inicialización perezosa y setter funcional
+3. Refactorizar App.jsx para usar useLocalStorage('tasks', initialTasks)
+4. Eliminar getInitialTasks y el useEffect de sincronización con localStorage
+
+LECCIÓN ASOCIADA:
+/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md
+
+ENTREGABLE:
+- Código del hook y cambios en App.jsx
+- Reporte indicando la ruta del plan y que la persistencia sigue funcionando
+```
+
+---
+
+## 🔍 Fase 5: useDebounce y búsqueda de tareas
+
+### 🎓 Objetivos de aprendizaje
+
+- Implementar un custom hook **useDebounce** para retrasar actualizaciones (búsqueda).
+- Practicar **useEffect** con **cleanup** (clearTimeout).
+- Filtrar la lista de tareas por texto sin disparar un filtrado en cada tecla.
+
+### ¿Qué es “debounce” y por qué useDebounce?
+
+La palabra viene de la electrónica: un interruptor mecánico **rebota** (*bounce*) al pulsarlo — hace y deshace contacto varias veces en milisegundos. **Debounce** es el proceso de ignorar esos rebotes y considerar solo el estado final, estable. En programación se usa la misma idea: muchos eventos seguidos (teclas, clics) se tratan como “ruido”; esperamos a que **se calme** y entonces actuamos una sola vez.
+
+Sin debounce, el valor del input de búsqueda cambia **en cada tecla**. Si filtraras la lista con ese valor, el filtrado se ejecutaría decenas de veces por palabra (una por "r", otra por "re", otra por "rea"…). Es innecesario y puede notarse como lag.
+
+**En la práctica:** *“Espera a que el usuario deje de escribir durante X ms; solo entonces usa el valor actual.”* Así, al escribir "react", el valor con el que filtras no se actualiza en cada letra, sino **una vez** unos 300 ms después de dejar de teclear. El filtrado (o una petición al servidor) corre muchas menos veces.
+
+En resumen: **useDebounce** recibe un valor que cambia a menudo (p. ej. el texto del input) y devuelve una versión que solo se actualiza cuando ese valor lleva un rato estable — el patrón adecuado para búsquedas y filtros en tiempo real.
+
+### 🧠 Conceptos (lección asociada)
+
+- useDebounce: valor que se actualiza solo tras `delay` ms sin cambios.
+- Cleanup: devolver una función desde useEffect que cancele el timer.
+
+### 📋 Pasos de implementación
+
+#### Paso 5.1: Crear `src/hooks/useDebounce.js`
+
+```jsx
+// hooks/useDebounce.js
+import { useState, useEffect } from 'react';
+
+export function useDebounce(value, delay = 300) {
+	const [debouncedValue, setDebouncedValue] = useState(value);
+
+	useEffect(() => {
+		const handler = setTimeout(() => {
+			setDebouncedValue(value);
+		}, delay);
+
+		return () => clearTimeout(handler);
+	}, [value, delay]);
+
+	return debouncedValue;
+}
+```
+
+#### Paso 5.2: Añadir búsqueda en la UI
+
+- En `App.jsx`: estado `searchTerm` y `debouncedSearch = useDebounce(searchTerm, 300)`.
+- Calcular `filteredTasks = tasks.filter(t => t.text.toLowerCase().includes(debouncedSearch.toLowerCase()))`.
+- Pasar `filteredTasks` a `<TaskList>` (no `tasks`).
+- Añadir un `<input>` controlado para `searchTerm` (placeholder "Buscar tareas...").
+
+### ✅ Criterios de aceptación
+
+- [ ] Existe `useDebounce` y se usa en la búsqueda.
+- [ ] El filtrado no se ejecuta en cada tecla sino tras dejar de escribir ~300 ms.
+- [ ] El efecto hace cleanup con `clearTimeout`.
+
+### 📝 Prompt para implementación
+
+```
+Implementa la Fase 5 del plan ubicado en:
+/Users/ruvebal/projects/ruvebal/scholar/udit/courses-repos/react-template/docs/plan-ejercicios-react.md
+
+TAREA: Añadir búsqueda de tareas con useDebounce.
+
+REQUISITOS:
+1. Crear src/hooks/useDebounce.js con cleanup (clearTimeout en el return del useEffect)
+2. En App.jsx: estado searchTerm, debouncedSearch = useDebounce(searchTerm, 300)
+3. Filtrar tareas por debouncedSearch y pasar lista filtrada a TaskList
+4. Añadir input de búsqueda con placeholder "Buscar tareas..."
+
+LECCIÓN ASOCIADA:
+/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md
+
+ENTREGABLE:
+- Código del hook y cambios en App.jsx + UI de búsqueda
+- Reporte indicando la ruta del plan y evidencia del cleanup en useEffect
+```
+
+---
+
+## 🎚️ Fase 6: useRef y useToggle
+
+### 🎓 Objetivos de aprendizaje
+
+- Usar **useRef** para referenciar el input de añadir tarea y darle **focus** tras añadir.
+- Implementar **useToggle** (o equivalente) para alternar "mostrar/ocultar tareas completadas".
+- Evitar re-renders innecesarios con refs (la ref no dispara render al cambiar).
+
+### 🧠 Conceptos (lección asociada)
+
+- useRef: referencia mutable que persiste entre renders; acceso al DOM con `ref={inputRef}`.
+- Custom hook useToggle: `[on, toggle, setTrue, setFalse]` para booleanos reutilizables.
+
+### 📋 Pasos de implementación
+
+#### Paso 6.1: useRef para focus
+
+- Crear `inputRef = useRef(null)` en el componente que contiene el input de nueva tarea (p. ej. `AddTaskInput` o `App`).
+- Tras llamar a `onAdd(...)`, ejecutar `inputRef.current?.focus()`.
+- Pasar `ref={inputRef}` al `<input>` de la tarea.
+
+#### Paso 6.2: useToggle para "Ocultar completadas"
+
+- Crear `src/hooks/useToggle.js`: estado booleano + funciones `toggle`, `setTrue`, `setFalse`.
+- En `App.jsx`: `const [hideCompleted, toggleHideCompleted] = useToggle(false)`.
+- Filtrar (o ocultar visualmente) las tareas completadas cuando `hideCompleted === true`.
+- Añadir botón o checkbox "Ocultar completadas" que llame a `toggleHideCompleted`.
+
+### ✅ Criterios de aceptación
+
+- [ ] Tras añadir una tarea, el foco vuelve al input de texto.
+- [ ] Existe useToggle y controla la visibilidad de tareas completadas.
+- [ ] La ref no causa re-renders al usarla solo para focus.
+
+### 📝 Prompt para implementación
+
+```
+Implementa la Fase 6 del plan ubicado en:
+/Users/ruvebal/projects/ruvebal/scholar/udit/courses-repos/react-template/docs/plan-ejercicios-react.md
+
+TAREA: useRef para focus en el input de nueva tarea y useToggle para ocultar completadas.
+
+REQUISITOS:
+1. useRef: después de añadir tarea, hacer focus en el input (inputRef.current?.focus())
+2. Crear useToggle(initial) → [value, toggle, setTrue, setFalse]
+3. Botón/checkbox "Ocultar completadas" que alterna visibilidad de tareas completadas
+4. Aplicar filtro (no eliminar del estado) cuando hideCompleted es true
+
+LECCIÓN ASOCIADA:
+/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md
+
+ENTREGABLE:
+- Código de useToggle, cambios en App.jsx y AddTaskInput (ref)
+- Reporte indicando la ruta del plan
+```
+
+---
+
+## ⚡ Fase 7: useMemo y useCallback (optimización)
+
+### 🎓 Objetivos de aprendizaje
+
+- Saber **cuándo** tiene sentido memoizar (listas filtradas/ordenadas costosas o callbacks en listas grandes).
+- Implementar **useMemo** para la lista filtrada/ordenada de tareas.
+- Implementar **useCallback** para handlers pasados a hijos (p. ej. `onToggle`, `onRemove`) si se observan re-renders innecesarios.
+- **No** abusar: documentar por qué se añade cada memoización.
+
+### 🧠 Conceptos (lección asociada)
+
+- useMemo: recalcular solo cuando cambian dependencias; evitar cálculos pesados en cada render.
+- useCallback: estabilizar la referencia de una función para no romper memoización de hijos (React.memo).
+- Optimización prematura: medir antes; memoizar cuando hay problema real de rendimiento.
+
+### 📋 Pasos de implementación
+
+#### Paso 7.1: useMemo para lista visible
+
+- Si ya tienes `filteredTasks` (búsqueda) y/o orden por prioridad, calcular la lista final con `useMemo`:
+
+```jsx
+const visibleTasks = useMemo(() => {
+	let list = tasks;
+	if (hideCompleted) list = list.filter((t) => !t.completed);
+	if (debouncedSearch) list = list.filter((t) => t.text.toLowerCase().includes(debouncedSearch.toLowerCase()));
+	return [...list].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+}, [tasks, hideCompleted, debouncedSearch]);
+```
+
+- Pasar `visibleTasks` a `<TaskList>`.
+
+#### Paso 7.2: useCallback (opcional y con criterio)
+
+- Si `TaskItem` está envuelto en `React.memo`, estabilizar `onToggle` y `onRemove` con `useCallback` para evitar que cada render de App cree nuevas funciones y fuerce re-render de todos los ítems.
+- Comentar en el código: "useCallback aquí porque TaskItem está memoizado y la lista puede ser larga".
+
+### ✅ Criterios de aceptación
+
+- [ ] La lista visible se calcula con useMemo y dependencias correctas.
+- [ ] Si se usa useCallback, está justificado (p. ej. hijos memoizados).
+- [ ] No hay memoización sin motivo documentado.
+
+### 📝 Prompt para implementación
+
+```
+Implementa la Fase 7 del plan ubicado en:
+/Users/ruvebal/projects/ruvebal/scholar/udit/courses-repos/react-template/docs/plan-ejercicios-react.md
+
+TAREA: Añadir useMemo para la lista visible de tareas y, si aplica, useCallback para handlers.
+
+REQUISITOS:
+1. useMemo para visibleTasks (filtros + orden) con dependencias [tasks, hideCompleted, debouncedSearch]
+2. Opcional: useCallback para onToggle y onRemove si TaskItem usa React.memo
+3. Comentar en código por qué se usa cada memoización (evitar optimización prematura)
+
+LECCIÓN ASOCIADA:
+/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md
+
+ENTREGABLE:
+- Cambios en App.jsx (useMemo y opcionalmente useCallback)
+- Reporte indicando la ruta del plan y la justificación de cada hook de optimización
+```
+
+---
+
 ## 📊 Resumen de Conceptos por Fase
 
 ### Tabla Comparativa de Complejidad
 
-| Aspecto                     | Fase 1                  | Fase 2                               | Fase 3                        |
-| --------------------------- | ----------------------- | ------------------------------------ | ----------------------------- |
-| **Dificultad**              | ⭐⭐                    | ⭐⭐⭐                               | ⭐⭐⭐⭐                      |
-| **Líneas de código nuevas** | ~15                     | ~60                                  | ~30                           |
-| **Componentes afectados**   | 1 (App.jsx)             | 3 (App, AddTaskInput, TaskItem)      | 1 (App.jsx)                   |
-| **Conceptos nuevos**        | Renderizado condicional | Estilos dinámicos, múltiples estados | useEffect, APIs del navegador |
-| **Tiempo estimado**         | 15-20 min               | 30-40 min                            | 25-35 min                     |
+| Aspecto              | F1                   | F2                 | F3                      | F4          | F5                   | F6                | F7                   |
+| -------------------- | -------------------- | ------------------ | ----------------------- | ----------- | -------------------- | ----------------- | -------------------- |
+| **Dificultad**       | ⭐⭐                 | ⭐⭐⭐             | ⭐⭐⭐⭐                | ⭐⭐⭐      | ⭐⭐⭐               | ⭐⭐⭐            | ⭐⭐⭐⭐             |
+| **Conceptos nuevos** | Condicional, .filter | Prioridad, estilos | useEffect, localStorage | Custom hook | useDebounce, cleanup | useRef, useToggle | useMemo, useCallback |
+| **Tiempo estimado**  | 15-20 min            | 30-40 min          | 25-35 min               | 20-30 min   | 25-35 min            | 25-35 min         | 20-30 min            |
 
 ### Progresión Pedagógica
 
@@ -895,6 +1232,23 @@ Fase 2: Sistema de Prioridades
 Fase 3: Persistencia localStorage
 ├─ Introduce: useEffect, sincronización externa, serialización
 └─ Fundamento para: Llamadas API, bases de datos, estado global
+
+Bloque Hooks (lección: react-hooks/index.md)
+Fase 4: useLocalStorage
+├─ Custom hooks: encapsular estado + efecto
+└─ Reutilización en toda la app
+
+Fase 5: useDebounce + búsqueda
+├─ useEffect con cleanup (clearTimeout)
+└─ Patrón debounce para inputs
+
+Fase 6: useRef + useToggle
+├─ useRef: DOM (focus) y valores mutables
+└─ useToggle: booleano reutilizable
+
+Fase 7: useMemo + useCallback
+├─ Optimización con criterio
+└─ Evitar optimización prematura
 ```
 
 ---
@@ -906,8 +1260,12 @@ Fase 3: Persistencia localStorage
 - [Render and Commit](https://react.dev/learn/render-and-commit) — Ciclo de renderizado y vDOM
 - [useState Hook](https://react.dev/reference/react/useState)
 - [useEffect Hook](https://react.dev/reference/react/useEffect)
+- [useRef Hook](https://react.dev/reference/react/useRef)
+- [useMemo Hook](https://react.dev/reference/react/useMemo)
+- [useCallback Hook](https://react.dev/reference/react/useCallback)
 - [Renderizado Condicional](https://react.dev/learn/conditional-rendering)
 - [Renderizado de Listas](https://react.dev/learn/rendering-lists)
+- [Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)
 
 ### MDN Web Docs
 
@@ -921,15 +1279,20 @@ Fase 3: Persistencia localStorage
 - [Hover, Focus y otros estados](https://tailwindcss.com/docs/hover-focus-and-other-states)
 - [Animations](https://tailwindcss.com/docs/animation)
 
+### Lección: Dominio de hooks
+
+- **Ruta:** `/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md`
+- Incluye: useFetch, useLocalStorage, useDebounce, useToggle, buenas prácticas, preguntas críticas y metodología atelier.
+
 ### Patrones Avanzados (Próximos pasos)
 
-Después de completar estas 3 fases, puedes explorar:
+Después de completar las Fases 1–7, puedes explorar:
 
 1. **Context API** para estado global (evitar prop drilling)
 2. **useReducer** para lógica de estado compleja
-3. **Custom Hooks** para reutilizar lógica (ej: `useLocalStorage`)
+3. **useFetch** (lección hooks) para datos de API
 4. **React Query/SWR** para gestión de datos del servidor
-5. **Optimización de rendimiento** con `useMemo` y `useCallback`
+5. **Tests de hooks** (renderHook, act) como en la lección
 
 ---
 
@@ -937,7 +1300,7 @@ Después de completar estas 3 fases, puedes explorar:
 
 ### Checklist de Completitud
 
-Al finalizar las 3 fases, deberías poder responder "Sí" a todas:
+Al finalizar las 7 fases, deberías poder responder "Sí" a todas:
 
 **Conocimientos:**
 
@@ -949,6 +1312,10 @@ Al finalizar las 3 fases, deberías poder responder "Sí" a todas:
 - [ ] ¿Entiendo el propósito de `useEffect`?
 - [ ] ¿Puedo explicar qué es un "efecto secundario"?
 - [ ] ¿Sé cómo funciona el array de dependencias de `useEffect`?
+- [ ] ¿Puedo crear un custom hook que encapsule estado y efecto?
+- [ ] ¿Entiendo cuándo usar useRef (DOM vs valor mutable)?
+- [ ] ¿Sé cuándo tiene sentido useMemo/useCallback y cuándo es optimización prematura?
+- [ ] ¿Puedo implementar cleanup en useEffect (timers, abort)?
 
 **Habilidades:**
 
@@ -956,6 +1323,8 @@ Al finalizar las 3 fases, deberías poder responder "Sí" a todas:
 - [ ] ¿Sé implementar estilos dinámicos con Tailwind?
 - [ ] ¿Puedo debuggear problemas de estado con React DevTools?
 - [ ] ¿Sé inspeccionar localStorage en las DevTools del navegador?
+- [ ] ¿Puedo refactorizar lógica a un custom hook y reutilizarla?
+- [ ] ¿Sé dar focus a un input con useRef tras una acción?
 
 ### Desafíos Adicionales (Para practicar más)
 
@@ -1018,22 +1387,26 @@ Después de implementar cada fase, documenta tu progreso con este formato:
 
 ## 🚀 Conclusión
 
-Este plan de ejercicios te guía desde conceptos básicos de manipulación de estado hasta técnicas avanzadas de sincronización con APIs externas. Cada fase construye sobre la anterior, reforzando los fundamentos de React:
+Este plan te guía en dos bloques: **Fases 1–3** (fundamentos) y **Fases 4–7** (dominio de hooks), alineado con la lección [Dominio de hooks](/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md). La lista de tareas crece en funcionalidad y en uso de hooks:
 
-- **Inmutabilidad** como principio fundamental
-- **Componentes** como unidades reutilizables
-- **Hooks** (`useState`, `useEffect`) para gestionar estado y efectos
-- **Interacción con el navegador** mediante APIs nativas
+- **Inmutabilidad** y vDOM como base
+- **useState** y **useEffect** para estado y efectos
+- **Custom hooks** (`useLocalStorage`, `useDebounce`, `useToggle`) para lógica reutilizable
+- **useRef** para DOM y valores que no disparan render
+- **useMemo** y **useCallback** con criterio, evitando optimización prematura
 
-Al completar estos ejercicios, tendrás una base sólida para construir aplicaciones React más complejas.
+Al completar las 7 fases, tendrás práctica directa con el contenido de la lección de hooks y una base sólida para estado global, APIs y tests de hooks.
 
 ---
 
 **Ruta de referencia del plan:**
 `/Users/ruvebal/projects/ruvebal/scholar/udit/courses-repos/react-template/docs/plan-ejercicios-react.md`
 
-**Proyecto relacionado:**
+**Lección React (fundamentos):**
 `/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react`
+
+**Lección Dominio de hooks (Fases 4–7):**
+`/Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md`
 
 ---
 
