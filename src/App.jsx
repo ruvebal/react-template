@@ -1,37 +1,59 @@
-import { useState } from 'react';
-import TaskList from './components/TaskList';
-import AddTaskInput from './components/AddTaskInput';
-
+import { useState } from "react";
+import TaskList from "./components/TaskList";
+import AddTaskInput from "./components/AddTaskInput";
+import ClearCompletedButton from "./components/ClearCompletedButton";
 
 function App() {
   // ESTADO: La lista de tareas (esta es la memoria de nuestra app)
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Aprender fundamentos de React', completed: false },
-    { id: 2, text: 'Construir una app de tareas', completed: false },
+    {
+      id: 1,
+      text: "Aprender fundamentos de React",
+      completed: false,
+      priority: "alta",
+    },
+    {
+      id: 2,
+      text: "Construir una app de tareas",
+      completed: false,
+      priority: "media",
+    },
+    {
+      id: 3,
+      text: "¡Diviértete con React!",
+      completed: false,
+      priority: "baja",
+    },
   ]);
 
   // FUNCIÓN: Añadir una nueva tarea
-  const addTask = (text) => {
+  const addTask = (text, priority = "media") => {
     const newTask = {
-      id: Date.now(), // ID único simple
+      id: Date.now(),
       text: text,
       completed: false,
+      priority: priority, // 🆕 Usar la prioridad recibida
     };
-    setTasks([...tasks, newTask]); // Añadir a las tareas existentes
+    setTasks([...tasks, newTask]);
   };
 
   // FUNCIÓN: Eliminar una tarea
   const removeTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   // FUNCIÓN: Alternar completado de tarea
   const toggleTask = (id) => {
-    setTasks(tasks.map(task =>
-      task.id === id
-        ? { ...task, completed: !task.completed }
-        : task
-    ));
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
+
+  // FUNCIÓN: Eliminar todas las tareas completadas
+  const clearCompleted = () => {
+    setTasks(tasks.filter((task) => !task.completed));
   };
 
   return (
@@ -45,12 +67,18 @@ function App() {
 
         <TaskList
           tasks={tasks}
-          onRemove={removeTask}
-          onToggle={toggleTask}
+          onRemoveTask={removeTask}
+          onToggleTask={toggleTask}
+        />
+
+        <ClearCompletedButton
+          count={tasks.filter((t) => t.completed).length}
+          onClear={clearCompleted}
         />
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          Total: {tasks.length} tareas | Completadas: {tasks.filter(t => t.completed).length}
+          Total: {tasks.length} tareas | Completadas:{" "}
+          {tasks.filter((t) => t.completed).length}
         </div>
       </div>
     </div>

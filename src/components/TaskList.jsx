@@ -1,6 +1,6 @@
-import TaskItem from './TaskItem';
+import TaskItem from "./TaskItem";
 
-function TaskList({ tasks, onRemove, onToggle }) {
+function TaskList({ tasks, onRemoveTask, onToggleTask }) {
   // Si no hay tareas, mostrar un mensaje amigable
   if (tasks.length === 0) {
     return (
@@ -13,12 +13,12 @@ function TaskList({ tasks, onRemove, onToggle }) {
   // Renderizar cada tarea usando .map()
   return (
     <div className="space-y-2">
-      {tasks.map(task => (
+      {tasks.map((task) => (
         <TaskItem
           key={task.id}
           task={task}
-          onRemove={onRemove}
-          onToggle={onToggle}
+          onRemoveTask={onRemoveTask}
+          onToggleTask={onToggleTask}
         />
       ))}
     </div>
