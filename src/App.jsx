@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import AddTaskInput from './components/AddTaskInput';
 import ClearCompletedButton from './components/ClearCompletedButton';
 import ResetAppButton from './components/ResetAppButton';
@@ -7,6 +7,7 @@ import TaskList from './components/TaskList';
 import TaskSummary from './components/TaskSummary';
 import { useIsFirstRender } from './hooks/useIsFirstRender';
 import { useDebounce } from './hooks/useDebounce';
+import { useToggle } from './hooks/useToggle';
 
 const INITIAL_TASKS = [
 	{ id: 1, text: 'Aprender fundamentos de React', completed: false, priority: 'alta' },
@@ -33,10 +34,19 @@ function App() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const debouncedSearch = useDebounce(searchTerm, 300);
 
-	// Filtrar tareas según la búsqueda debounced
-	const filteredTasks = tasks.filter((t) =>
-		t.text.toLowerCase().includes(debouncedSearch.trim().toLowerCase())
-	);
+	// Nuevo: toggle para ocultar completadas
+	const [hideCompleted, toggleHideCompleted] = useToggle(false);
+
+	// Ref para el input de añadir tarea (se pasa a AddTaskInput)
+	const addInputRef = useRef(null);
+
+	// Filtrar tareas según la búsqueda debounced y el flag hideCompleted
+	const normalizedSearch = debouncedSearch.trim().toLowerCase();
+	const filteredTasks = tasks.filter((t) => {
+		if (hideCompleted && t.completed) return false;
+		if (!normalizedSearch) return true;
+		return t.text.toLowerCase().includes(normalizedSearch);
+	});
 
 	// Persistencia en localStorage y mensaje según si es carga inicial o guardado posterior.
 	// isFirstRender no va en dependencias: solo debe influir en la primera ejecución del efecto
@@ -95,17 +105,22 @@ function App() {
 
 				<SavedIndicator show={!!savedIndicator} message={savedIndicator?.message} />
 
-				{/* Buscador de tareas */}
-				<div className="mb-4">
+				{/* Buscador de tareas y control "Ocultar completadas" */}
+				<div className="mb-4 flex items-center gap-4">
 					<input
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						placeholder="Buscar tareas..."
-						className="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+						className="flex-1 w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
 					/>
+
+					<label className="inline-flex items-center gap-2 text-sm">
+						<input type="checkbox" checked={hideCompleted} onChange={toggleHideCompleted} className="w-4 h-4" />
+						<span className="text-gray-700">Ocultar completadas</span>
+					</label>
 				</div>
 
-				<AddTaskInput onAdd={addTask} />
+				<AddTaskInput ref={addInputRef} onAdd={addTask} />
 
 				<TaskList tasks={filteredTasks} onRemoveTask={removeTask} onToggleTask={toggleTask} />
 
