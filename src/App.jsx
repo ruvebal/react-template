@@ -6,6 +6,7 @@ import SavedIndicator from './components/SavedIndicator';
 import TaskList from './components/TaskList';
 import TaskSummary from './components/TaskSummary';
 import { useIsFirstRender } from './hooks/useIsFirstRender';
+import { useDebounce } from './hooks/useDebounce';
 
 const INITIAL_TASKS = [
 	{ id: 1, text: 'Aprender fundamentos de React', completed: false, priority: 'alta' },
@@ -27,6 +28,15 @@ function App() {
 	const [tasks, setTasks] = useState(getInitialTasks);
 	const [savedIndicator, setSavedIndicator] = useState(null); // null = oculto; { message } = mostrar
 	const isFirstRender = useIsFirstRender();
+
+	// Nuevo estado para búsqueda y valor debounced
+	const [searchTerm, setSearchTerm] = useState('');
+	const debouncedSearch = useDebounce(searchTerm, 300);
+
+	// Filtrar tareas según la búsqueda debounced
+	const filteredTasks = tasks.filter((t) =>
+		t.text.toLowerCase().includes(debouncedSearch.trim().toLowerCase())
+	);
 
 	// Persistencia en localStorage y mensaje según si es carga inicial o guardado posterior.
 	// isFirstRender no va en dependencias: solo debe influir en la primera ejecución del efecto
@@ -85,9 +95,19 @@ function App() {
 
 				<SavedIndicator show={!!savedIndicator} message={savedIndicator?.message} />
 
+				{/* Buscador de tareas */}
+				<div className="mb-4">
+					<input
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						placeholder="Buscar tareas..."
+						className="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+					/>
+				</div>
+
 				<AddTaskInput onAdd={addTask} />
 
-				<TaskList tasks={tasks} onRemoveTask={removeTask} onToggleTask={toggleTask} />
+				<TaskList tasks={filteredTasks} onRemoveTask={removeTask} onToggleTask={toggleTask} />
 
 				<ClearCompletedButton count={tasks.filter((t) => t.completed).length} onClear={clearCompleted} />
 
