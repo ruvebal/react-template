@@ -1,88 +1,102 @@
-import { useState } from "react";
-import TaskList from "./components/TaskList";
-import AddTaskInput from "./components/AddTaskInput";
-import ClearCompletedButton from "./components/ClearCompletedButton";
+import { useEffect, useState } from 'react';
+import AddTaskInput from './components/AddTaskInput';
+import ClearCompletedButton from './components/ClearCompletedButton';
+import ResetAppButton from './components/ResetAppButton';
+import SavedIndicator from './components/SavedIndicator';
+import TaskList from './components/TaskList';
+import TaskSummary from './components/TaskSummary';
+import { useIsFirstRender } from './hooks/useIsFirstRender';
+
+const INITIAL_TASKS = [
+	{ id: 1, text: 'Aprender fundamentos de React', completed: false, priority: 'alta' },
+	{ id: 2, text: 'Construir una app de tareas', completed: false, priority: 'media' },
+	{ id: 3, text: '¡Diviértete con React!', completed: false, priority: 'baja' },
+];
+
+function getInitialTasks() {
+	try {
+		const savedTasks = localStorage.getItem('tasks');
+		if (savedTasks) return JSON.parse(savedTasks);
+	} catch (error) {
+		console.error('Error al cargar tareas:', error);
+	}
+	return INITIAL_TASKS;
+}
 
 function App() {
-  // ESTADO: La lista de tareas (esta es la memoria de nuestra app)
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      text: "Aprender fundamentos de React",
-      completed: false,
-      priority: "alta",
-    },
-    {
-      id: 2,
-      text: "Construir una app de tareas",
-      completed: false,
-      priority: "media",
-    },
-    {
-      id: 3,
-      text: "¡Diviértete con React!",
-      completed: false,
-      priority: "baja",
-    },
-  ]);
+	const [tasks, setTasks] = useState(getInitialTasks);
+	const [savedIndicator, setSavedIndicator] = useState(null); // null = oculto; { message } = mostrar
+	const isFirstRender = useIsFirstRender();
 
-  // FUNCIÓN: Añadir una nueva tarea
-  const addTask = (text, priority = "media") => {
-    const newTask = {
-      id: Date.now(),
-      text: text,
-      completed: false,
-      priority: priority, // 🆕 Usar la prioridad recibida
-    };
-    setTasks([...tasks, newTask]);
-  };
+	// Persistencia en localStorage y mensaje según si es carga inicial o guardado posterior.
+	// isFirstRender no va en dependencias: solo debe influir en la primera ejecución del efecto
+	// (montaje). Si lo añadiéramos, al pasar a false se re-ejecutaría el efecto y mostraría
+	// "Cambios guardados" justo después de "Lista restaurada".
+	useEffect(() => {
+		try {
+			localStorage.setItem('tasks', JSON.stringify(tasks));
+			const message = isFirstRender
+				? '✅ Lista restaurada'
+				: '✅ Cambios guardados automáticamente';
+			setSavedIndicator({ message });
+			const timer = setTimeout(() => setSavedIndicator(null), 2000);
+			return () => clearTimeout(timer);
+		} catch (error) {
+			console.error('Error al guardar tareas:', error);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- isFirstRender solo para la primera ejecución
+	}, [tasks]);
 
-  // FUNCIÓN: Eliminar una tarea
-  const removeTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
+	const handleResetApp = () => {
+		localStorage.removeItem('tasks');
+		setTasks([]);
+	};
 
-  // FUNCIÓN: Alternar completado de tarea
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task,
-      ),
-    );
-  };
+	// FUNCIÓN: Añadir una nueva tarea
+	const addTask = (text, priority = 'media') => {
+		const newTask = {
+			id: Date.now(),
+			text: text,
+			completed: false,
+			priority: priority, // 🆕 Usar la prioridad recibida
+		};
+		setTasks([...tasks, newTask]);
+	};
 
-  // FUNCIÓN: Eliminar todas las tareas completadas
-  const clearCompleted = () => {
-    setTasks(tasks.filter((task) => !task.completed));
-  };
+	// FUNCIÓN: Eliminar una tarea
+	const removeTask = (id) => {
+		setTasks(tasks.filter((task) => task.id !== id));
+	};
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-center text-indigo-900 mb-8">
-          📝 Mi lista de tareas
-        </h1>
+	// FUNCIÓN: Alternar completado de tarea
+	const toggleTask = (id) => {
+		setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
+	};
 
-        <AddTaskInput onAdd={addTask} />
+	// FUNCIÓN: Eliminar todas las tareas completadas
+	const clearCompleted = () => {
+		setTasks(tasks.filter((task) => !task.completed));
+	};
 
-        <TaskList
-          tasks={tasks}
-          onRemoveTask={removeTask}
-          onToggleTask={toggleTask}
-        />
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+			<div className="max-w-2xl mx-auto">
+				<h1 className="text-4xl font-bold text-center text-indigo-900 mb-8">📝 Mi lista de tareas</h1>
 
-        <ClearCompletedButton
-          count={tasks.filter((t) => t.completed).length}
-          onClear={clearCompleted}
-        />
+				<SavedIndicator show={!!savedIndicator} message={savedIndicator?.message} />
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Total: {tasks.length} tareas | Completadas:{" "}
-          {tasks.filter((t) => t.completed).length}
-        </div>
-      </div>
-    </div>
-  );
+				<AddTaskInput onAdd={addTask} />
+
+				<TaskList tasks={tasks} onRemoveTask={removeTask} onToggleTask={toggleTask} />
+
+				<ClearCompletedButton count={tasks.filter((t) => t.completed).length} onClear={clearCompleted} />
+
+				<TaskSummary tasks={tasks} />
+
+				<ResetAppButton onReset={handleResetApp} />
+			</div>
+		</div>
+	);
 }
 
 export default App;
