@@ -6,11 +6,15 @@ function AddTaskInput({ onAdd }) {
 
 	const inputRef = useRef(null);
 
+	// Al enviar: validamos, avisamos al padre, reseteamos el formulario y devolvemos el foco.
+	// Orden importante: primero onAdd (el padre actualiza su estado) y después setInput/setPriority
+	// (reseteamos el nuestro), así la UI queda coherente. inputRef.current?.focus() devuelve el
+	// foco al input para poder escribir otra tarea sin hacer clic; ?. evita error si la ref no está.
 	const handleSubmit = () => {
 		if (input.trim()) {
-			onAdd(input, priority); // 🆕 Pasar la prioridad
+			onAdd(input, priority);
 			setInput('');
-			setPriority('media'); // Reset a prioridad media
+			setPriority('media');
 			inputRef.current?.focus();
 		}
 	};

@@ -1152,13 +1152,19 @@ ENTREGABLE:
 - Crear `src/hooks/useToggle.js`: estado booleano + funciones `toggle`, `setTrue`, `setFalse`.
 - En `App.jsx`: `const [hideCompleted, toggleHideCompleted] = useToggle(false)`.
 - Filtrar (o ocultar visualmente) las tareas completadas cuando `hideCompleted === true`.
-- Añadir botón o checkbox "Ocultar completadas" que llame a `toggleHideCompleted` **solo cuando exista al menos una tarea completada** (`tasks.some(t => t.completed)`).
 - Nota pedagógica: este patrón introduce la idea de que **la UI debe reaccionar a los datos**. Si no hay tareas completadas, el toggle desaparece porque no tiene efecto; cuando aparecen completadas, la opción de ocultarlas se hace visible.
+
+#### Paso 6.3: Componente HideCompletedCheckbox
+
+- Crear `src/components/HideCompletedCheckbox.jsx`: componente presentacional que recibe `checked`, `onChange` y opcionalmente `label`.
+- Renderiza un checkbox con su etiqueta ("Ocultar tareas completadas"); el padre controla el estado con useToggle y pasa `checked={hideCompleted}` y `onChange={toggleHideCompleted}`.
+- Mostrarlo **solo cuando exista al menos una tarea completada** (`hasCompletedTasks && <HideCompletedCheckbox ... />`), para que la UI no ofrezca una acción sin efecto.
 
 ### ✅ Criterios de aceptación
 
 - [ ] Tras añadir una tarea, el foco vuelve al input de texto.
 - [ ] Existe useToggle y controla la visibilidad de tareas completadas.
+- [ ] Existe el componente HideCompletedCheckbox y se usa en App con checked/onChange.
 - [ ] La ref no causa re-renders al usarla solo para focus.
 
 ### 📝 Prompt para implementación
@@ -1172,14 +1178,14 @@ TAREA: useRef para focus en el input de nueva tarea y useToggle para ocultar com
 REQUISITOS:
 1. useRef: después de añadir tarea, hacer focus en el input (inputRef.current?.focus())
 2. Crear useToggle(initial) → [value, toggle, setTrue, setFalse]
-3. Componente Botón/checkbox "Ocultar completadas" que alterna visibilidad de tareas completadas
+3. Crear componente HideCompletedCheckbox (checked, onChange, label opcional) y usarlo en App
 4. Aplicar filtro (no eliminar del estado) cuando hideCompleted es true
 
 LECCIÓN ASOCIADA:
 /Users/ruvebal/projects/ruvebal/scholar/udit/web-atelier-udit/web-foundations/docs/lessons/es/react/react-hooks/index.md
 
 ENTREGABLE:
-- Código de useToggle, cambios en App.jsx y AddTaskInput (ref)
+- Código de useToggle, HideCompletedCheckbox.jsx, cambios en App.jsx y AddTaskInput (ref)
 - Reporte indicando la ruta del plan
 ```
 

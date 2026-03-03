@@ -3,6 +3,7 @@ import AddTaskInput from './components/AddTaskInput';
 import ClearCompletedButton from './components/ClearCompletedButton';
 import ResetAppButton from './components/ResetAppButton';
 import SavedIndicator from './components/SavedIndicator';
+import HideCompletedCheckbox from './components/HideCompletedCheckbox';
 import SearchTasksInput from './components/SearchTasksInput';
 import TaskList from './components/TaskList';
 import TaskSummary from './components/TaskSummary';
@@ -142,19 +143,7 @@ function App() {
           Nota pedagógica: la propia UI comunica el estado de los datos; si nada está completado,
           no se ofrece una acción que no tendría efecto. */}
 				{hasCompletedTasks && (
-					<div className="flex items-center justify-between mb-2">
-						<span className="text-sm text-gray-600">
-							<label className="inline-flex items-center gap-2 cursor-pointer select-none">
-								<input
-									type="checkbox"
-									checked={hideCompleted}
-									onChange={toggleHideCompleted}
-									className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-								/>
-								<span>Ocultar tareas completadas</span>
-							</label>
-						</span>
-					</div>
+					<HideCompletedCheckbox checked={hideCompleted} onChange={toggleHideCompleted} />
 				)}
 
 				<TaskList tasks={visibleTasks} onRemoveTask={removeTask} onToggleTask={toggleTask} />
