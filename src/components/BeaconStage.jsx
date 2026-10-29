@@ -9,6 +9,8 @@ import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion.js';
 const CAMERA = { position: [2.15, 1.35, 2.55], fov: 40 };
 const DPR = [1, 1.5];
 const LOOK_AT = [0, 0.35, 0];
+// Opaque clear avoids a transparent buffer flashing through on some composites.
+const GL = { alpha: false, antialias: true };
 
 export default function BeaconStage({ title, parts, useShader = false }) {
   const reduced = usePrefersReducedMotion();
@@ -28,22 +30,34 @@ export default function BeaconStage({ title, parts, useShader = false }) {
 
   return (
     <div className="stage">
-      <Canvas camera={CAMERA} dpr={DPR}>
-        <color attach="background" args={['#161411']} />
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[4, 6, 2]} intensity={2.4} />
-        <directionalLight position={[-3, 2.2, -2]} intensity={0.55} />
-        <Beacon
-          hovered={hovered}
-          selected={selected}
-          reduced={reduced}
-          onHover={setHovered}
-          onSelect={setSelected}
-          useShader={useShader}
-        />
-        <BudgetProbe onSample={setBudget} />
-        <OrbitControls enablePan={false} target={LOOK_AT} />
-      </Canvas>
+      <div
+        className="stage-canvas"
+        role="img"
+        aria-label={`${title} WebGL scene`}
+      >
+        <Canvas
+          camera={CAMERA}
+          dpr={DPR}
+          gl={GL}
+          onPointerLeave={() => setHovered(null)}
+          onPointerMissed={() => setHovered(null)}
+        >
+          <color attach="background" args={['#161411']} />
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[4, 6, 2]} intensity={2.4} />
+          <directionalLight position={[-3, 2.2, -2]} intensity={0.55} />
+          <Beacon
+            hovered={hovered}
+            selected={selected}
+            reduced={reduced}
+            onHover={setHovered}
+            onSelect={setSelected}
+            useShader={useShader}
+          />
+          <BudgetProbe onSample={setBudget} />
+          <OrbitControls enablePan={false} target={LOOK_AT} />
+        </Canvas>
+      </div>
       <aside className="readout">
         <h1>{title}</h1>
         <ul className="parts">

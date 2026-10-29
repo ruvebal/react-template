@@ -1,6 +1,4 @@
-# Dependencies
-package-lock.json
-
+# Dependencies — keep package-lock.json committed so pins stay reproducible.
 _private/
 
 # Environment variables

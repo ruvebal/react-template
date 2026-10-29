@@ -13,6 +13,8 @@ Routed sandbox: `/` indexes the exercises; each example is its own page. Student
 | `/ex2-shader` | Unit 9 — same scene, rim `shaderMaterial` on the bulb |
 | `*` | Redirects to `/` |
 
+Version `1.0.0` — instructor demonstration ready for Units 8–9.
+
 ## Pins (re-checked against the lessons, 2026-10)
 
 | Package | Version |
@@ -57,6 +59,7 @@ docs/
   renderer-info.md
   shader-note.md
   ai-3d-merge-log.md
+  guia-revision-shader-rim.md   revisión oral / checklist (ES)
 ```
 
 ## Student work
