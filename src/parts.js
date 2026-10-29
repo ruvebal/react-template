@@ -1,3 +1,7 @@
+/**
+ * Part ids are the contract between raycast hits, button clicks, and the readout.
+ * Strings, not indexes — so a reordered mesh tree cannot silently retarget state.
+ */
 export const PartId = {
   plinth: 'plinth',
   shaft: 'shaft',
@@ -17,7 +21,7 @@ const BASE = [
   },
 ];
 
-/** Unit 8 — standard materials only. */
+/** Unit 8 — standard materials only. Copy shown when useShader={false}. */
 export const PARTS_BEACON = [
   ...BASE,
   {
@@ -27,7 +31,7 @@ export const PARTS_BEACON = [
   },
 ];
 
-/** Unit 9 — bulb is a shaderMaterial. */
+/** Unit 9 — same tree; the lamp blurb names the uniforms the viva will ask about. */
 export const PARTS_SHADER = [
   ...BASE,
   {
@@ -37,6 +41,7 @@ export const PARTS_SHADER = [
   },
 ];
 
+/** Route table for NavBar + Home. Add a page → add a row; App.jsx stays the switchboard. */
 export const EXERCISES = [
   {
     path: '/ex1-beacon',
