@@ -1,1 +1,159 @@
-@import "tailwindcss";
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #161411;
+  color: #f4efe6;
+  font: 15px/1.45 ui-sans-serif, system-ui, sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-main {
+  flex: 1;
+  min-height: 0;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgb(244 239 230 / 0.16);
+  background: #161411;
+}
+
+.nav-link {
+  color: rgb(244 239 230 / 0.72);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #f4efe6;
+}
+
+.nav-link.active {
+  border-bottom: 2px solid #e36a2c;
+}
+
+.home {
+  max-width: 40rem;
+  padding: 24px 16px;
+}
+
+.home h1 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.home p {
+  margin: 0 0 12px;
+}
+
+.exercise-list {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+}
+
+.exercise-list li {
+  margin-bottom: 12px;
+}
+
+.exercise-list a {
+  color: #e36a2c;
+  font-weight: 600;
+}
+
+.exercise-list p {
+  margin: 4px 0 0;
+  color: rgb(244 239 230 / 0.72);
+}
+
+.home code {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  height: 100%;
+}
+
+.readout {
+  padding: 16px;
+  background: #161411;
+  border-left: 1px solid rgb(244 239 230 / 0.16);
+  overflow: auto;
+}
+
+@media (max-width: 720px) {
+  .stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .readout {
+    border-left: 0;
+    border-top: 1px solid rgb(244 239 230 / 0.16);
+  }
+}
+
+.readout h1 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.readout p {
+  margin: 0 0 8px;
+}
+
+.parts {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.parts button {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid rgb(244 239 230 / 0.35);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.parts button[aria-pressed='true'] {
+  background: #e36a2c;
+  border-color: #e36a2c;
+  color: #1a120c;
+}
+
+.meta {
+  color: rgb(244 239 230 / 0.72);
+}
+
+.budget {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.budget.over {
+  color: #ffb4a2;
+}
