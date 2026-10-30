@@ -1,10 +1,16 @@
 /**
  * Accepted ceiling for *this* mesh tree (shadows off, DPR capped).
- * Course caps are looser (desktop ≤ 200 calls, mobile ≤ 80) — this row is tighter
- * on purpose so students feel every extra geometry / shadow map / texture.
  *
- * Change the tree → change CEILING and docs/renderer-info.md in the same commit.
- * memory.textures === 1 with null maps is Three's empty sampler placeholder, not a file you loaded.
+ * THEORY — graded budget:
+ *   Course caps (desktop ≤ 200 draw calls, mobile ≤ 80) are the safety rail.
+ *   This CEILING is the *accepted row* for the instructor beacon — tight on
+ *   purpose so students feel every geometry, shadow map, or texture.
+ *
+ * Change the tree → change CEILING and `docs/renderer-info.md` in the same commit.
+ *
+ * THEORY — textures === 1 with null maps:
+ *   Three keeps an empty sampler placeholder. A file you load is an *extra*
+ *   texture. Shadow maps also inflate calls, triangles, and textures.
  */
 export const CEILING = {
   calls: 6,
@@ -13,7 +19,15 @@ export const CEILING = {
   textures: 1,
 };
 
-/** null while sampling or before the first real frame (calls === 0). */
+/**
+ * Tri-state helper for the HUD:
+ *   null  — still sampling / no finished frame yet (calls === 0)
+ *   true  — within this tree's ceiling
+ *   false — over budget (paint `.budget.over`)
+ *
+ * No hooks here on purpose — pure function of the last sample. Easy to test,
+ * easy to defend: "the verdict is derived data, not another piece of state."
+ */
 export function withinCeiling(sample) {
   if (!sample || sample.calls === 0) return null;
   return (

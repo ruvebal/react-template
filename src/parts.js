@@ -1,6 +1,10 @@
 /**
  * Part ids are the contract between raycast hits, button clicks, and the readout.
  * Strings, not indexes — so a reordered mesh tree cannot silently retarget state.
+ *
+ * THEORY — identity in UI state:
+ *   The same idea as React `key`: stable identity beats "third child in the list".
+ *   Hover/selected store these ids; the mesh tree and the aside both interpret them.
  */
 export const PartId = {
   plinth: 'plinth',

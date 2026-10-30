@@ -16,7 +16,12 @@ function colorFor(id, hovered, selected, idle) {
 
 /**
  * Raycast → React. Handlers live on a mesh *or* a group; children inherit the hit.
- * stopPropagation: without it, a click on the bulb would also fire on every parent.
+ *
+ * THEORY — R3F events are not DOM bubbling. Fiber raycasts from the pointer into
+ * the scene, hits the nearest mesh, then walks *up* the Three object graph.
+ * `stopPropagation` stops parent groups from receiving the same hit — without it,
+ * a click on the bulb would also select the shaft/plinth if they shared ancestry
+ * incorrectly, or fire multiple `onSelect`s up the tree.
  */
 function bindPart(id, onHover, onSelect) {
   return {
@@ -38,7 +43,16 @@ function bindPart(id, onHover, onSelect) {
 /**
  * One composed beacon. Three semantic parts (plinth / shaft / lamp), six meshes.
  * Unit 8: all meshStandardMaterial. Unit 9: only the bulb swaps to a shader.
- * Geometries are declared in JSX once — never `new BoxGeometry()` inside useFrame.
+ *
+ * THEORY — scene graph:
+ *   Parent transforms multiply down to children. Rotate the yoke *group* once;
+ *   arm, bulb, and ring follow. That is the same idea as a DOM subtree, with
+ *   matrices instead of CSS.
+ *
+ * THEORY — memory / dispose:
+ *   Geometries are declared in JSX once. R3F owns their lifetime. Never
+ *   `new BoxGeometry()` inside `useFrame` (allocates every frame → GC pressure,
+ *   and leaks if you forget `dispose`). That REJECT is in docs/ai-3d-merge-log.md.
  */
 export default function Beacon({
   hovered,
@@ -48,14 +62,45 @@ export default function Beacon({
   onSelect,
   useShader = false,
 }) {
-  // Rotate the yoke group, not each child — one write, three meshes follow.
+  /**
+   * useRef — reason:
+   *   We need a stable handle to the Three.Group that is the yoke, so the render
+   *   loop can mutate `rotation.y` without going through React state.
+   *
+   * THEORY — ref vs state for animation:
+   *   Putting `rotation` in `useState` would re-render React ~60×/s, reconcile the
+   *   tree, and fight the GPU. Imperative mutation of the Three object is the
+   *   correct model for continuous motion. React still owns *interaction* state
+   *   (hovered / selected); the frame loop owns *pose*.
+   *
+   * `ref={yoke}` on the group fills `yoke.current` after commit. Until then it is
+   * null — always guard inside `useFrame`.
+   */
   const yoke = useRef(null);
 
+  /**
+   * useFrame — reason (R3F hook, not React core):
+   *   Subscribes this callback to the Canvas render loop (typically
+   *   requestAnimationFrame). Runs once per frame, *before* `gl.render`.
+   *
+   * THEORY — why not setInterval / setState?
+   *   Games and real-time graphics sync work to the display refresh. `delta` is
+   *   seconds since the last frame so motion is frame-rate independent:
+   *   `θ += ω * Δt`, not `θ += constant` (which would run faster on 144 Hz).
+   *
+   * THEORY — must be under <Canvas>:
+   *   `useFrame` reads the R3F store from context. Outside Canvas there is no
+   *   renderer loop — the hook throws or no-ops. Same rule as BudgetProbe.
+   *
+   * First argument is the R3F state (`{ gl, scene, camera, … }`); we only need
+   * `delta` here, so the state is ignored with `_`.
+   */
   useFrame((_, delta) => {
     const node = yoke.current;
     // prefers-reduced-motion: skip the spin; raycast + buttons still work.
     if (!node || reduced) return;
-    // A background tab can wake with a multi-second delta and fling the arm a full turn.
+    // THEORY — spike clamping: a background tab can wake with Δt of several
+    // seconds. Without min(), the arm teleports. Cap Δt, keep ω (`* 0.45`) separate.
     node.rotation.y += Math.min(delta, 0.05) * 0.45;
   });
 
