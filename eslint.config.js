@@ -27,4 +27,9 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // vite.config.js runs in Node (reads process.env.BASE_PATH), not in the browser.
+    files: ['vite.config.js'],
+    languageOptions: { globals: globals.node },
+  },
 ]);
