@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ex5 sleeve — original art drawn for react-template (no photo, no third-party image).
+  Source of public/ex5/sleeve.png. Rasterised and encoded by scripts/encode-ex5.sh.
+  The corner labels are the orientation check: uv 0,0 must land bottom-left on the sleeve.
+  A soft gradient (where ETC1S loss shows) and thin type and grooves (where UASTC holds edges).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3a5f"/>
+      <stop offset="1" stop-color="#0d1824"/>
+    </linearGradient>
+    <radialGradient id="label" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f6a86a"/>
+      <stop offset="1" stop-color="#e36a2c"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#ground)"/>
+  <g fill="none" stroke="#f4efe6" stroke-opacity="0.22">
+    <circle cx="256" cy="268" r="182" stroke-width="1"/>
+    <circle cx="256" cy="268" r="170" stroke-width="1"/>
+    <circle cx="256" cy="268" r="158" stroke-width="1"/>
+    <circle cx="256" cy="268" r="146" stroke-width="1"/>
+    <circle cx="256" cy="268" r="134" stroke-width="1"/>
+    <circle cx="256" cy="268" r="122" stroke-width="1"/>
+    <circle cx="256" cy="268" r="110" stroke-width="1"/>
+  </g>
+  <circle cx="256" cy="268" r="84" fill="url(#label)"/>
+  <circle cx="256" cy="268" r="6" fill="#161411"/>
+  <g font-family="Helvetica, Arial, sans-serif" fill="#f4efe6" text-anchor="middle">
+    <text x="256" y="104" font-size="40" font-weight="700" letter-spacing="3">SUITCASE</text>
+    <text x="256" y="314" font-size="15" font-weight="600" fill="#161411" letter-spacing="2">&amp; ROOM</text>
+    <text x="256" y="452" font-size="14" letter-spacing="1" fill-opacity="0.8">react-template · Ex5 · original art</text>
+    <path d="M256 124 l10 14 h-20 z" fill="#e36a2c"/>
+  </g>
+  <g font-family="Menlo, monospace" font-size="22" fill="#f4efe6">
+    <text x="16" y="36">uv 0,1</text>
+    <text x="16" y="494">uv 0,0</text>
+    <text x="496" y="36" text-anchor="end">uv 1,1</text>
+    <text x="496" y="494" text-anchor="end">uv 1,0</text>
+  </g>
+</svg>

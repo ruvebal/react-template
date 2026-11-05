@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // public/basis/ is three's vendored Basis transcoder (minified Emscripten), not course code.
+  globalIgnores(['dist', 'public/basis']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
