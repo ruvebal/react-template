@@ -12,8 +12,8 @@ const ROWS = [
  *
  * <details> — reason:
  *   Native disclosure: keyboard and screen-reader accessible with no state of ours.
- *   Open by default so the three bullets are visible; a student can fold it away to
- *   give the canvas more height.
+ *   Folded by default so the stage keeps its vertical room; a student opens it when
+ *   they are ready to study the three linked prompts.
  *
  * THEORY — DOM, not WebGL:
  *   The notes sit above the stage in normal flow, never as a layer over the canvas,
@@ -25,7 +25,7 @@ export default function FocusPanel() {
   if (!focus) return null;
 
   return (
-    <details className="focus" open>
+    <details className="focus">
       <summary>
         Focus <span className="focus-lesson">— {focus.lesson}</span>
       </summary>

@@ -16,7 +16,7 @@ Routed sandbox: `/` indexes the exercises; each example is its own page. Student
 | `/ex5-ktx2` | PNG / ETC1S / UASTC switch: file bytes (suitcase) vs computed GPU bytes (room), `texture.format`, `colorSpace` | KTX2 / Basis |
 | `*` | Redirects to `/` | — |
 
-Every exercise route shows a **Focus** strip under the nav: *Look at* (the file and lines that carry the idea), *Change* (one safe experiment), *Measure / explain* (what you must be able to produce), each linked to its lesson section. The notes live in `src/focus.js`.
+Every exercise route has a collapsed **Focus** strip under the nav: *Look at* (the file and lines that carry the idea), *Change* (one safe experiment), *Measure / explain* (what you must be able to produce), each linked to its lesson section. The notes live in `src/focus.js`.
 
 Version `1.1.0` — beacon (Units 8–9) unchanged; cover satellites Ex3–Ex5 added; GitHub Pages workflow added.
 
@@ -47,6 +47,8 @@ Open `http://localhost:5173/` → Index → any exercise. Unknown paths redirect
 - `public/ex5/sleeve.png` — the source picture, original art drawn for this repo (`scripts/ex5-sleeve.svg`), 512 × 512, a UV label in each corner as the orientation check.
 - `public/ex5/sleeve-etc1s.ktx2`, `public/ex5/sleeve-uastc.ktx2` — encoded from that PNG with toktx `4.4.2`: `--t2 --encode etc1s|uastc --genmipmap --lower_left_maps_to_s0t0 --assign_oetf srgb`, plus `--zcmp 18` for UASTC. `ktx info` on both shows `KHR_DF_TRANSFER_SRGB` and `KTXorientation: ru`.
 - `public/basis/basis_transcoder.{js,wasm}` — copied from `node_modules/three/examples/jsm/libs/basis/` of the pinned three `0.185.1`. The loader finds them at `import.meta.env.BASE_URL + 'basis/'`. If you bump three, copy them again (`scripts/encode-ex5.sh --transcoder`); never point the loader at a CDN.
+
+Vite also emits a hashed transcoder pair in `dist/assets/` (about 585 KB before compression) because `KTX2Loader` imports three’s default module path. That generated copy is expected and ignored: the only runtime files we vendor are the single `public/basis/` pair above. Do not hand-copy another transcoder to a route.
 
 To rebuild the sleeve files: `scripts/encode-ex5.sh` (needs `rsvg-convert`, `toktx`, `ktx`; it stops loudly if one is missing, and its output is byte-identical run to run). `--keep-png` re-encodes the committed PNG without redrawing it.
 
