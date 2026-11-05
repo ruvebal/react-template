@@ -1,0 +1,92 @@
+/*
+ * Implements: cover-shaders — `src/SleeveMaterial.jsx` (CodeSandbox-ready).
+ * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/cover-shaders/
+ *
+ * Deviation from the fence: the R3F extend key only. The fence registers
+ * `extend({ SleeveShader })`, i.e. the JSX tag `<sleeveShader>`. extend names are
+ * global to the whole app (X9 F1), so this reference registers the same class as
+ * `RefSleeveShader` and renders `<refSleeveShader>`. The uniforms, the clock, the
+ * props and every GLSL statement are the fence's; the only additions are `// FOCUS:`
+ * comment lines (four; three sit inside the GLSL, which ignores them).
+ */
+import { useRef } from 'react';
+import { extend, useFrame } from '@react-three/fiber';
+import { shaderMaterial } from '@react-three/drei';
+
+// The band moves 0.4 per second along a diagonal that runs from -0.5 to 2.5: 3.0 / 0.4 = 7.5 s.
+const SWEEP_SECONDS = 7.5;
+
+/*
+ * Purpose: print the sleeve picture on the mesh and sweep one band of light across it.
+ * Inputs: uMap (the sleeve picture), uTime (seconds, wrapped), uHot (0 or 1, from React state).
+ * Coordinate space: UV. vUv says where on the picture this pixel is, copied from the mesh.
+ * Performance: one texture lookup per pixel. No loop, no discard.
+ */
+const SleeveShader = shaderMaterial(
+  { uMap: null, uTime: 0, uHot: 0 },
+  /* glsl */ `
+    varying vec2 vUv;
+
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  /* glsl */ `
+    uniform sampler2D uMap;
+    uniform float uTime;
+    uniform float uHot;
+    varying vec2 vUv;
+
+    void main() {
+      // FOCUS: the lookup. The picture (uMap) at the place (vUv). Checklist items 1 and 2.
+      vec4 picture = texture2D(uMap, vUv);
+
+      float diagonal = vUv.x + vUv.y;
+      float sweep = uTime * 0.4 - 0.5;
+      float sheen = 1.0 - smoothstep(0.0, 0.12, abs(diagonal - sweep));
+
+      vec3 color = picture.rgb * (1.0 + 0.15 * uHot);
+      // FOCUS: the one effect. It changes the answer, not the place. Checklist item 4.
+      color = mix(color, vec3(1.0), sheen * 0.35);
+      gl_FragColor = vec4(color, 1.0);
+
+      // FOCUS: colour line 2 of 2 (line 1 is colorSpace on the texture). Checklist item 5.
+      #include <colorspace_fragment>
+    }
+  `,
+  (material) => {
+    material.precision = 'mediump';
+  },
+);
+
+extend({ RefSleeveShader: SleeveShader });
+
+/**
+ * The sleeve's material. It looks up the picture at the mesh's UV and sweeps
+ * one band of light across it.
+ *
+ * @param {object} props
+ * @param {import('three').Texture} props.map The sleeve picture.
+ * @param {boolean} props.hot True while the sleeve is hovered or selected.
+ * @param {boolean} props.reduced True under prefers-reduced-motion. The band then waits off the picture.
+ * @returns {JSX.Element} A material element; put it inside the sleeve's `<mesh>`.
+ */
+export default function SleeveMaterial({ map, hot, reduced }) {
+  const material = useRef(null);
+
+  useFrame((_, delta) => {
+    const node = material.current;
+    if (!node) return;
+    if (reduced) {
+      // uTime 0 puts the band at -0.5, off the picture. The picture itself still renders.
+      node.uTime = 0;
+      return;
+    }
+    // Wrap once per crossing, so uTime stays small enough for a mediump float.
+    // FOCUS: React never touches uTime. The frame clock writes the uniform; the wrap keeps mediump honest.
+    node.uTime = (node.uTime + Math.min(delta, 0.05)) % SWEEP_SECONDS;
+  });
+
+  return <refSleeveShader ref={material} uMap={map} uHot={hot ? 1 : 0} />;
+}

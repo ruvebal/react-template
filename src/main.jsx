@@ -6,6 +6,10 @@ import App from './App.jsx';
 
 const root = document.getElementById('root');
 
+// '/' locally, '/react-template/' on GitHub Pages (vite.config.js `base`). The router
+// wants it without the trailing slash; '' would mean the root, so keep '/' there.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 if (!root) {
   throw new Error('Missing #root mount node');
 }
@@ -21,6 +25,8 @@ if (!root) {
  * BrowserRouter — reason:
  *   HTML5 history routing so `/ex1-beacon` and `/ex2-shader` are real URLs.
  *   Students add pages; they do not replace this shell per lab.
+ *   `basename` lets the same routes live under /react-template/ on GitHub Pages;
+ *   404.html (a copy of index.html, made by the Pages workflow) serves deep links.
  *
  * THEORY — one DOM root, two renderers later:
  *   This file mounts the DOM tree. `<Canvas>` inside an exercise mounts a *second*
@@ -29,7 +35,7 @@ if (!root) {
  */
 createRoot(root).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </StrictMode>,

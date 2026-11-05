@@ -177,3 +177,92 @@ body {
 .budget.over {
   color: #ffb4a2;
 }
+
+/* Ex5 — the PNG / ETC1S / UASTC switch and its two numbers. Same palette as above. */
+.switch {
+  margin: 12px 0 8px;
+  padding: 8px 10px;
+  border: 1px solid rgb(244 239 230 / 0.35);
+  border-radius: 6px;
+}
+
+.switch legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.switch label {
+  display: block;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.switch input {
+  margin-right: 6px;
+  accent-color: #e36a2c;
+}
+
+.switch input:focus-visible {
+  outline: 2px solid #e36a2c;
+  outline-offset: 2px;
+}
+
+.measure {
+  margin: 0 0 8px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.measure dt {
+  color: rgb(244 239 230 / 0.72);
+}
+
+.measure dd {
+  margin: 0 0 6px;
+}
+
+/* Focus strip — three study bullets per route (src/focus.js). In flow, never over the canvas. */
+.focus {
+  padding: 6px 16px 8px;
+  border-bottom: 1px solid rgb(244 239 230 / 0.16);
+  background: #1d1a16;
+  font-size: 13px;
+}
+
+.focus summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.focus summary:focus-visible,
+.focus a:focus-visible {
+  outline: 2px solid #e36a2c;
+  outline-offset: 2px;
+}
+
+.focus-lesson {
+  font-weight: 400;
+  color: rgb(244 239 230 / 0.72);
+}
+
+.focus ul {
+  margin: 4px 0 0;
+  padding-left: 1.1rem;
+}
+
+.focus li {
+  margin: 2px 0;
+}
+
+.focus a {
+  color: #e36a2c;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

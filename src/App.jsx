@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import FocusPanel from './components/FocusPanel.jsx';
 import NavBar from './components/NavBar.jsx';
 import Home from './pages/Home.jsx';
 
@@ -15,6 +16,10 @@ import Home from './pages/Home.jsx';
  */
 const Ex1Beacon = lazy(() => import('./pages/Ex1Beacon.jsx'));
 const Ex2Shader = lazy(() => import('./pages/Ex2Shader.jsx'));
+// Satellites (D24): the cover fork, the cover shader, the KTX2 switch. Same lazy split.
+const Ex3Cover = lazy(() => import('./pages/Ex3Cover.jsx'));
+const Ex4CoverShader = lazy(() => import('./pages/Ex4CoverShader.jsx'));
+const Ex5Ktx2 = lazy(() => import('./pages/Ex5Ktx2.jsx'));
 
 function RouteFallback() {
   return <p className="route-fallback">Loading exercise…</p>;
@@ -24,6 +29,8 @@ export default function App() {
   return (
     <div className="app">
       <NavBar />
+      {/* Where to focus on this route: Look at · Change · Measure (src/focus.js). */}
+      <FocusPanel />
       <div className="app-main">
         {/*
           Suspense — reason:
@@ -40,6 +47,9 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/ex1-beacon" element={<Ex1Beacon />} />
             <Route path="/ex2-shader" element={<Ex2Shader />} />
+            <Route path="/ex3-cover" element={<Ex3Cover />} />
+            <Route path="/ex4-cover-shader" element={<Ex4CoverShader />} />
+            <Route path="/ex5-ktx2" element={<Ex5Ktx2 />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
