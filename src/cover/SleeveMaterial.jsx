@@ -5,8 +5,9 @@
  * Deviation from the fence: the R3F extend key only. The fence registers
  * `extend({ SleeveShader })`, i.e. the JSX tag `<sleeveShader>`. extend names are
  * global to the whole app (X9 F1), so this reference registers the same class as
- * `RefSleeveShader` and renders `<refSleeveShader>`. The GLSL, the uniforms, the
- * clock and the props are the fence's, byte for byte.
+ * `RefSleeveShader` and renders `<refSleeveShader>`. The uniforms, the clock, the
+ * props and every GLSL statement are the fence's; the only additions are `// FOCUS:`
+ * comment lines (four; three sit inside the GLSL, which ignores them).
  */
 import { useRef } from 'react';
 import { extend, useFrame } from '@react-three/fiber';
@@ -38,6 +39,7 @@ const SleeveShader = shaderMaterial(
     varying vec2 vUv;
 
     void main() {
+      // FOCUS: the lookup. The picture (uMap) at the place (vUv). Checklist items 1 and 2.
       vec4 picture = texture2D(uMap, vUv);
 
       float diagonal = vUv.x + vUv.y;
@@ -45,9 +47,11 @@ const SleeveShader = shaderMaterial(
       float sheen = 1.0 - smoothstep(0.0, 0.12, abs(diagonal - sweep));
 
       vec3 color = picture.rgb * (1.0 + 0.15 * uHot);
+      // FOCUS: the one effect. It changes the answer, not the place. Checklist item 4.
       color = mix(color, vec3(1.0), sheen * 0.35);
       gl_FragColor = vec4(color, 1.0);
 
+      // FOCUS: colour line 2 of 2 (line 1 is colorSpace on the texture). Checklist item 5.
       #include <colorspace_fragment>
     }
   `,
@@ -80,6 +84,7 @@ export default function SleeveMaterial({ map, hot, reduced }) {
       return;
     }
     // Wrap once per crossing, so uTime stays small enough for a mediump float.
+    // FOCUS: React never touches uTime. The frame clock writes the uniform; the wrap keeps mediump honest.
     node.uTime = (node.uTime + Math.min(delta, 0.05)) % SWEEP_SECONDS;
   });
 

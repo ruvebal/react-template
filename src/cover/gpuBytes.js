@@ -2,7 +2,8 @@
  * Implements: ktx2-basis — "Measure the room — `src/gpuBytes.js`" (CodeSandbox-ready).
  * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/ktx2-basis/
  *
- * Deviation from the fence: none. Used by /ex5-ktx2.
+ * Deviation from the fence: none in code; `// FOCUS:` comment lines added (study pointers).
+ * Used by /ex5-ktx2.
  */
 import * as THREE from 'three';
 
@@ -39,6 +40,7 @@ export function formatName(format) {
  * @returns {{ bytes: number, levels: number, width: number, height: number, format: string }}
  */
 export function gpuBytes(texture, { levels = 'all' } = {}) {
+  // FOCUS: packed path. The room is what the transcoder handed the GPU, level by level.
   if (texture.isCompressedTexture) {
     const all = texture.mipmaps;
     const counted = levels === 'all' ? all : all.slice(0, 1);
@@ -54,6 +56,7 @@ export function gpuBytes(texture, { levels = 'all' } = {}) {
   const image = texture.image;
   const width = image.naturalWidth || image.width;
   const height = image.naturalHeight || image.height;
+  // FOCUS: count the same levels on both sides (all, or level 0), or the comparison lies.
   const chain =
     levels === 'all' && texture.generateMipmaps
       ? Math.floor(Math.log2(Math.max(width, height))) + 1
@@ -63,6 +66,7 @@ export function gpuBytes(texture, { levels = 'all' } = {}) {
   for (let level = 0; level < chain; level += 1) {
     const w = Math.max(1, Math.floor(width / 2 ** level));
     const h = Math.max(1, Math.floor(height / 2 ** level));
+    // FOCUS: unpacked path. For RGBA this is width × height × 4 per level — the upload inflation.
     bytes += THREE.TextureUtils.getByteLength(w, h, texture.format, texture.type);
   }
 

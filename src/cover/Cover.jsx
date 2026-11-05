@@ -20,6 +20,7 @@
  *      not create a texture, so the page that wants a picture makes it and passes it in.
  *   4. The sleeve's material is `picture ? <SleeveMaterial … /> : <meshStandardMaterial … />`.
  *      Both branches are the fences' own lines (cover-shaders change 3 / Unit 8).
+ *   5. `// FOCUS:` comment lines (study pointers) — comments only.
  */
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -35,6 +36,7 @@ function colorFor(id, hovered, selected, idle) {
   return idle;
 }
 
+// FOCUS: the beacon's helper, unchanged. A mesh hit and a panel button call the same setters.
 function bindPart(id, onHover, onSelect) {
   return {
     onPointerOver: (event) => {
@@ -61,6 +63,7 @@ export default function Cover({ hovered, selected, reduced, onHover, onSelect, p
     if (!node || reduced) return;
     phase.current += Math.min(delta, 0.05);
     // The disc slides part-way out of the sleeve and back. No allocation, one position write.
+    // FOCUS: lab step 6 — the one useFrame animation. Pose is mutated on the frame clock, never put in state.
     node.position.x = 0.3 + 0.12 * Math.sin(phase.current * 0.8);
   });
 
@@ -76,6 +79,7 @@ export default function Cover({ hovered, selected, reduced, onHover, onSelect, p
 
       <mesh position={[-0.35, 0.68, 0]} {...bindPart(PartId.sleeve, onHover, onSelect)}>
         <boxGeometry args={[1.24, 1.24, 0.02]} />
+        {/* FOCUS: the only place Ex3 and Ex4/Ex5 differ — no picture, flat Unit 8 sleeve. */}
         {picture ? (
           // cover-shaders change 3: the sleeve material, in place of its meshStandardMaterial.
           <SleeveMaterial

@@ -25,6 +25,7 @@ export default function CoverReadout({
       <ul className="parts">
         {parts.map((item) => (
           <li key={item.id}>
+            {/* FOCUS: same onSelect the meshes call — prove the bridge in the viva. */}
             <button
               type="button"
               aria-pressed={selected === item.id}
@@ -39,6 +40,7 @@ export default function CoverReadout({
         {part ? part.note : 'Click a mesh or a button. Both write the same state.'}
       </p>
       <p className="meta">Hover: {hovered ?? '—'}</p>
+      {/* FOCUS: renderer.info, sampled ~1 Hz by BudgetProbe. `textures` is a count, not bytes. */}
       <p className={verdict === false ? 'budget over' : 'budget'}>
         {budget
           ? `calls ${budget.calls}/${ceiling.calls} · triangles ${budget.triangles}/${ceiling.triangles} · geometries ${budget.geometries} · textures ${budget.textures}`

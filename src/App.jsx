@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import FocusPanel from './components/FocusPanel.jsx';
 import NavBar from './components/NavBar.jsx';
 import Home from './pages/Home.jsx';
 
@@ -28,6 +29,8 @@ export default function App() {
   return (
     <div className="app">
       <NavBar />
+      {/* Where to focus on this route: Look at · Change · Measure (src/focus.js). */}
+      <FocusPanel />
       <div className="app-main">
         {/*
           Suspense — reason:

@@ -2,7 +2,8 @@
  * Implements: cover-shaders — `src/sleevePicture.js` (CodeSandbox-ready).
  * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/cover-shaders/
  *
- * Deviation from the fence: none. Used by /ex4-cover-shader.
+ * Deviation from the fence: none in code; `// FOCUS:` comment lines added (study pointers).
+ * Used by /ex4-cover-shader.
  */
 import { useEffect, useMemo } from 'react';
 import { CanvasTexture, SRGBColorSpace } from 'three';
@@ -65,10 +66,12 @@ export function useSleevePicture(title) {
   const picture = useMemo(() => {
     const texture = new CanvasTexture(drawSleevePicture(title));
     // The canvas holds screen colours. This tag tells the GPU to unpack them before the maths.
+    // FOCUS: colour line 1 of 2. Without it the sleeve comes out too dark.
     texture.colorSpace = SRGBColorSpace;
     return texture;
   }, [title]);
 
+  // FOCUS: made once per title (useMemo), freed on unmount. This texture is the +1 on the panel.
   useEffect(() => () => picture.dispose(), [picture]);
 
   return picture;

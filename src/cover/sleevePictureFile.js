@@ -9,6 +9,7 @@
  *      hard-coded '/sleeve.jpg'. /ex5-ktx2 passes
  *      `import.meta.env.BASE_URL + 'ex5/sleeve.png'`, the original source PNG that the
  *      two .ktx2 files were encoded from (scripts/encode-ex5.sh).
+ *   3. `// FOCUS:` comment lines (study pointers) — comments only.
  * The tag function, its position outside the hook, and the drei call are the fence's.
  */
 import { useTexture } from '@react-three/drei';
@@ -16,6 +17,7 @@ import { SRGBColorSpace } from 'three';
 
 function tagScreenColours(texture) {
   // A photo holds screen colours. This tag tells the GPU to unpack them before the maths.
+  // FOCUS: a PNG is tagged by hand; a KTX2 file carries its own tag (see sleevePictureKtx2.js).
   texture.colorSpace = SRGBColorSpace;
 }
 
@@ -27,5 +29,6 @@ function tagScreenColours(texture) {
  * @returns {import('three').Texture} The texture to pass to the material as `map`.
  */
 export function useSleevePicture(url) {
+  // FOCUS: tagScreenColours lives outside the hook, so useTexture calls it once, before the upload.
   return useTexture(url, tagScreenColours);
 }

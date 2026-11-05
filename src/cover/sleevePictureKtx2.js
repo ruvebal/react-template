@@ -11,6 +11,7 @@
  *      of the pinned three 0.185.1, never from a CDN.
  *   3. The file is a parameter, `useSleevePicture(url)`, instead of the fence's
  *      hard-coded '/sleeve-etc1s.ktx2', so the switch can pick ETC1S or UASTC.
+ *   4. `// FOCUS:` comment lines (study pointers) — comments only.
  * setTranscoderPath + detectSupport(gl), and not touching colorSpace, are the fence's.
  */
 import { useLoader, useThree } from '@react-three/fiber';
@@ -29,7 +30,9 @@ const TRANSCODER_PATH = import.meta.env.BASE_URL + 'basis/';
 export function useSleevePicture(url) {
   const gl = useThree((state) => state.gl);
   return useLoader(KTX2Loader, url, (loader) => {
+    // FOCUS: the transcoder comes from public/basis/, copied from this three.js — never a CDN.
     loader.setTranscoderPath(TRANSCODER_PATH);
+    // FOCUS: asks this GPU which packed formats it reads. That choice is texture.format on the panel.
     loader.detectSupport(gl);
   });
 }

@@ -9,6 +9,7 @@
  *   box 12 + box 12 + cylinder(64 segments) 256 = 280 triangles, one draw per mesh.
  * The same numbers the cover-shaders lesson reports for the Unit 8 placeholder tree.
  */
+// FOCUS: this tree's accepted row. Add a mesh and the verdict flips; change this and the README together.
 export const CEILING_COVER = {
   calls: 3,
   triangles: 280,
@@ -17,6 +18,7 @@ export const CEILING_COVER = {
 };
 
 /** The same tree with a sleeve picture: one more texture, nothing else moves. */
+// FOCUS: a picture is one more texture COUNT. It says nothing about bytes — that is gpuBytes.js.
 export const CEILING_SLEEVE = {
   ...CEILING_COVER,
   textures: 2,
