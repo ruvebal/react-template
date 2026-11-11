@@ -21,4 +21,10 @@ export const COVER_EXERCISES = [
     title: 'Ex5 — KTX2 switch',
     blurb: 'PNG / ETC1S / UASTC: file bytes (suitcase) vs computed GPU bytes (room), format, colorSpace.',
   },
+  {
+    path: '/ex6-streamfield',
+    title: 'Ex6 — Streamfield (Unit 10)',
+    blurb:
+      'MSW-mocked WebSocket → RIS SVG spectrogram + R3F aura. Same lab-01 contract as Unit 10.',
+  },
 ];

@@ -8,11 +8,12 @@ const ALL_EXERCISES = [...EXERCISES, ...COVER_EXERCISES];
 export default function Home() {
   return (
     <main className="home">
-      <h1>FE II Units 8–9 and satellites — exercises</h1>
+      <h1>FE II Units 8–10 and satellites — exercises</h1>
       <p>
         Instructor demonstration. Pick an exercise. Ex1–Ex2 are the beacon (Units 8–9); Ex3–Ex5
-        are the album-cover satellites (Unit 8 lab fork, cover shaders, KTX2). Defend your own
-        mesh tree, shader and sleeve on the team hand-in — do not ship this paste unchanged.
+        are the album-cover satellites; Ex6 is the Unit 10 Streamfield (MSW WebSocket → RIS SVG +
+        R3F aura). Defend your own mesh tree, shader, sleeve, and stream lifecycle on the team
+        hand-in — do not ship this paste unchanged.
       </p>
       <ol className="exercise-list">
         {ALL_EXERCISES.map((exercise) => (

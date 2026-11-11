@@ -266,3 +266,154 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Ex6 — Streamfield: SVG RIS over decorative R3F aura */
+.streamfield-stage .streamfield-canvas {
+  position: relative;
+  isolation: isolate;
+  background: #0e0c0a;
+}
+
+.stream-aura {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.streamfield-svg-layer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 12px 12px 16px;
+  pointer-events: none;
+}
+
+.ris-field {
+  width: min(100%, 520px);
+  height: auto;
+  max-height: calc(100% - 110px);
+  filter: drop-shadow(0 0 28px rgb(62 207 191 / 0.18));
+}
+
+.stream-continuum {
+  width: min(100%, 520px);
+  height: auto;
+  border: 1px solid rgb(244 239 230 / 0.12);
+  filter: drop-shadow(0 0 18px rgb(62 207 191 / 0.12));
+}
+
+.stream-continuum__path {
+  stroke-dasharray: 0.12 0.08;
+  stroke-dashoffset: 0;
+}
+
+.stream-continuum.is-live:not(.is-reduced) .stream-continuum__path {
+  animation: continuum-flow 1.1s linear infinite;
+}
+
+.stream-continuum.is-gap .stream-continuum__path {
+  stroke-dasharray: 0.04 0.1;
+  animation: none;
+  opacity: 0.55;
+}
+
+.stream-continuum.is-reduced .stream-continuum__path {
+  stroke-dasharray: none;
+  animation: none;
+}
+
+.stream-continuum.is-live:not(.is-reduced) .stream-continuum__head {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: continuum-head 1.1s ease-in-out infinite;
+}
+
+@keyframes continuum-flow {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes continuum-head {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stream-continuum__path,
+  .stream-continuum__head {
+    animation: none !important;
+  }
+}
+
+.ris-ripple {
+  animation: ris-pulse 1.6s ease-out infinite;
+}
+
+@keyframes ris-pulse {
+  from {
+    stroke-opacity: 0.55;
+  }
+  to {
+    stroke-opacity: 0.05;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ris-ripple {
+    animation: none;
+  }
+}
+
+.streamfield-banner {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  margin: 0;
+  padding: 8px 10px;
+  background: rgb(227 106 44 / 0.16);
+  border: 1px solid #e36a2c;
+  font-size: 13px;
+}
+
+.stream-readout a {
+  color: #e36a2c;
+}
+
+.stream-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid rgb(244 239 230 / 0.35);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.stream-pill--live {
+  border-color: #3ecfbf;
+  color: #3ecfbf;
+}
+
+.stream-pill--reconnecting,
+.stream-pill--connecting {
+  border-color: #e36a2c;
+  color: #e36a2c;
+}
+
+.stream-pill--offline {
+  border-color: #ffb4a2;
+  color: #ffb4a2;
+}

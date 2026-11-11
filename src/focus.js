@@ -12,10 +12,13 @@
  * the path they will publish at.
  */
 const LESSONS = 'https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/';
+const ANIM = 'https://ruvebal.github.io/web-atelier-udit/lessons/en/web-animations/';
 const U8 = `${LESSONS}unit-8-r3f-fundamentals/`;
 const U9 = `${LESSONS}unit-9-shader-literacy/`;
+const U10 = `${LESSONS}unit-10-iot-python-backend/`;
 const CS = `${LESSONS}cover-shaders/`;
 const KB = `${LESSONS}ktx2-basis/`;
+const SVG = `${ANIM}svg-master-session/`;
 
 export const FOCUS = {
   '/ex1-beacon': {
@@ -91,6 +94,21 @@ export const FOCUS = {
     measure: {
       text: 'File bytes (suitcase) vs GPU bytes (room) per mode, with texture.format; the texture count stays 2. That pair is your ktx2-note row.',
       href: `${KB}#the-choice-you-write`,
+    },
+  },
+  '/ex6-streamfield': {
+    lesson: 'Unit 10 — IoT / WebSocket membrane',
+    look: {
+      text: 'StreamContinuum.jsx — Catmull–Rom ribbon + stroke-dash flow; handlers.js (MSW) + useDeviceStream.js lifecycle. SVG owns reading; R3F is aura only.',
+      href: `${U10}#flagship-sandbox--streamfield-ris`,
+    },
+    change: {
+      text: 'Toggle MSW ↔ live FastAPI, then kill the source: continuum dashes freeze/gap while status → reconnecting.',
+      href: `${U10}#mock-sockets--test-without-a-device`,
+    },
+    measure: {
+      text: 'Name who owns space (SVG RIS + continuum) vs who draws aura pixels (R3F) — SVG master Round-4.',
+      href: `${SVG}#round-4-3d-compatibilityrenderer-is-not-scene-model`,
     },
   },
 };

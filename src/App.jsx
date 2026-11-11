@@ -20,6 +20,7 @@ const Ex2Shader = lazy(() => import('./pages/Ex2Shader.jsx'));
 const Ex3Cover = lazy(() => import('./pages/Ex3Cover.jsx'));
 const Ex4CoverShader = lazy(() => import('./pages/Ex4CoverShader.jsx'));
 const Ex5Ktx2 = lazy(() => import('./pages/Ex5Ktx2.jsx'));
+const Ex6Streamfield = lazy(() => import('./pages/Ex6Streamfield.jsx'));
 
 function RouteFallback() {
   return <p className="route-fallback">Loading exercise…</p>;
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/ex3-cover" element={<Ex3Cover />} />
             <Route path="/ex4-cover-shader" element={<Ex4CoverShader />} />
             <Route path="/ex5-ktx2" element={<Ex5Ktx2 />} />
+            <Route path="/ex6-streamfield" element={<Ex6Streamfield />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
