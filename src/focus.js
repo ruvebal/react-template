@@ -99,16 +99,16 @@ export const FOCUS = {
   '/ex6-streamfield': {
     lesson: 'Unit 10 — IoT / WebSocket membrane',
     look: {
-      text: 'StreamContinuum.jsx — Catmull–Rom ribbon + stroke-dash flow; handlers.js (MSW) + useDeviceStream.js lifecycle. SVG owns reading; R3F is aura only.',
-      href: `${U10}#flagship-sandbox--streamfield-ris`,
+      text: 'Read the latest telemetry frame (JSON) first. Continuum = temperature over the history ring; RIS = same frames in polar form. snapshot() builds a frame — not a Rive Snapshot.',
+      href: `${U10}#flagship-sandbox--streamfield`,
     },
     change: {
-      text: 'Toggle MSW ↔ live FastAPI, then kill the source: continuum dashes freeze/gap while status → reconnecting.',
-      href: `${U10}#mock-sockets--test-without-a-device`,
+      text: 'Aura off. Toggle MSW ↔ live FastAPI, then kill the source: continuum gaps while status → reconnecting.',
+      href: `${U10}#file-map--every-participant`,
     },
     measure: {
-      text: 'Name who owns space (SVG RIS + continuum) vs who draws aura pixels (R3F) — SVG master Round-4.',
-      href: `${SVG}#round-4-3d-compatibilityrenderer-is-not-scene-model`,
+      text: 'Name each streamfield file’s job; trust SVG + readout over aura (Round-4 ownership).',
+      href: `${U10}#how-to-read-the-graphics-in-order`,
     },
   },
 };

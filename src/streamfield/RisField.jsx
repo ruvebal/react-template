@@ -141,21 +141,30 @@ export default function RisField({ data, status, history, reducedMotion }) {
         x="20"
         y="28"
         fill="#f4efe6"
-        fillOpacity="0.72"
+        fillOpacity="0.78"
         fontFamily="ui-monospace, monospace"
         fontSize="11"
       >
-        RIS · radial interference spectrogram
+        RIS — polar view of the history ring
       </text>
       <text
         x="20"
-        y="382"
+        y="46"
         fill="#f4efe6"
-        fillOpacity="0.55"
+        fillOpacity="0.5"
         fontFamily="ui-monospace, monospace"
         fontSize="10"
       >
-        temp → radius · humidity → rings · seq → ripple
+        same frames as continuum, mapped to angle
+      </text>
+      <text x="20" y="368" fill="#e36a2c" fillOpacity="0.85" fontFamily="ui-monospace, monospace" fontSize="10">
+        temperatureC → radius
+      </text>
+      <text x="20" y="382" fill="#3ecfbf" fillOpacity="0.85" fontFamily="ui-monospace, monospace" fontSize="10">
+        humidityPct → ring opacity
+      </text>
+      <text x="20" y="396" fill="#f4efe6" fillOpacity="0.65" fontFamily="ui-monospace, monospace" fontSize="10">
+        sequence → ripple size
       </text>
     </svg>
   );

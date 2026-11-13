@@ -23,7 +23,7 @@ export const COVER_EXERCISES = [
   },
   {
     path: '/ex6-streamfield',
-    title: 'Ex6 — Streamfield (Unit 10)',
+    title: 'Ex6 — Streamfield / WebSocket (Unit 10)',
     blurb:
       'MSW-mocked WebSocket → RIS SVG spectrogram + R3F aura. Same lab-01 contract as Unit 10.',
   },

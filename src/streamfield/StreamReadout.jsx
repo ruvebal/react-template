@@ -8,12 +8,18 @@ const STATUS_COPY = {
   offline: 'Offline / bad frame',
 };
 
+/**
+ * Teaching panel for Ex6 — status, field mapping, and the latest telemetry frame.
+ * “Frame” = one JSON message. The contract builder is named snapshot() — not Rive Snapshot.
+ */
 export default function StreamReadout({
   data,
   status,
   lastMessageAt,
   source,
   onSourceChange,
+  showAura,
+  onShowAuraChange,
 }) {
   const [now, setNow] = useState(lastMessageAt);
 
@@ -23,27 +29,21 @@ export default function StreamReadout({
     return () => clearInterval(id);
   }, [lastMessageAt, status]);
 
-  // Seed the clock from the socket callback (lastMessageAt), not Date.now() in render.
   const clock = now ?? lastMessageAt;
   const staleMs = lastMessageAt != null && clock != null ? clock - lastMessageAt : null;
   const stale =
     status === 'live' && staleMs != null && staleMs > 2500 ? 'stale risk' : 'fresh';
 
+  const frameJson = data
+    ? JSON.stringify(data, null, 2)
+    : '{\n  // waiting for the first telemetry frame\n}';
+
   return (
     <aside className="readout stream-readout" aria-live="polite">
-      <h1>Ex6 — Streamfield (RIS)</h1>
+      <h1>Ex6 — Streamfield</h1>
       <p className="meta">
-        Unit 10 WebSocket contract visualised. SVG owns the reading (RIS + continuum
-        ribbon with stroke-dash flow); R3F is aura only — same Round-4 distinction as
-        the{' '}
-        <a
-          href="https://ruvebal.github.io/web-atelier-udit/lessons/en/web-animations/svg-master-session/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          SVG master session
-        </a>
-        .
+        Unit 10 WebSocket rehearsal. Read the frame (JSON) first, then the SVG membrane. Aura is
+        optional décor — not the data owner.
       </p>
 
       <fieldset className="switch">
@@ -68,6 +68,18 @@ export default function StreamReadout({
         </label>
       </fieldset>
 
+      <fieldset className="switch">
+        <legend>Display</legend>
+        <label>
+          <input
+            type="checkbox"
+            checked={Boolean(showAura)}
+            onChange={(e) => onShowAuraChange?.(e.target.checked)}
+          />
+          Show R3F aura (decorative)
+        </label>
+      </fieldset>
+
       <dl className="measure">
         <dt>Connection</dt>
         <dd>
@@ -78,16 +90,48 @@ export default function StreamReadout({
         <dt>deviceId</dt>
         <dd>{data?.deviceId ?? '—'}</dd>
         <dt>temperatureC</dt>
-        <dd>{data?.readings?.temperatureC ?? '—'}</dd>
+        <dd>
+          {data?.readings?.temperatureC ?? '—'}
+          <span className="stream-hint"> → RIS radius · continuum height</span>
+        </dd>
         <dt>humidityPct</dt>
-        <dd>{data?.readings?.humidityPct ?? '—'}</dd>
+        <dd>
+          {data?.readings?.humidityPct ?? '—'}
+          <span className="stream-hint"> → RIS ring opacity</span>
+        </dd>
         <dt>sequence</dt>
-        <dd>{data?.sequence ?? '—'}</dd>
+        <dd>
+          {data?.sequence ?? '—'}
+          <span className="stream-hint"> → ripple · frame order</span>
+        </dd>
       </dl>
 
+      <h2 className="stream-subhead">Latest telemetry frame</h2>
       <p className="meta">
-        Measure: unregister the service worker or kill uvicorn and watch reconnect +
-        stale handling.
+        Built by <code>snapshot(sequence)</code> in <code>contract.js</code> / FastAPI. One message
+        on the wire — not a Rive <code>Snapshot</code>.
+      </p>
+      <pre className="stream-frame-json" tabIndex={0}>
+        {frameJson}
+      </pre>
+
+      <h2 className="stream-subhead">How to read the graphics</h2>
+      <ol className="stream-howto">
+        <li>
+          <strong>Continuum</strong> (ribbon): temperature over the last ~48 frames; dash flow =
+          live channel; dashed gap = reconnecting.
+        </li>
+        <li>
+          <strong>RIS</strong> (radar): polar view of the same history — radius from temperature,
+          rings from humidity, ripple from sequence.
+        </li>
+        <li>
+          <strong>Aura</strong>: soft WebGL mood only. Grade the membrane from SVG + this panel.
+        </li>
+      </ol>
+
+      <p className="meta">
+        Studio test: kill MSW/uvicorn and watch connection → reconnecting + freshness.
       </p>
     </aside>
   );

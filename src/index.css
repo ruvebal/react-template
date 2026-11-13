@@ -286,7 +286,7 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   align-items: center;
   justify-items: center;
   gap: 10px;
@@ -296,14 +296,14 @@ body {
 }
 
 .ris-field {
-  width: min(100%, 520px);
+  width: min(100%, 420px);
   height: auto;
-  max-height: calc(100% - 110px);
+  max-height: calc(100% - 120px);
   filter: drop-shadow(0 0 28px rgb(62 207 191 / 0.18));
 }
 
 .stream-continuum {
-  width: min(100%, 520px);
+  width: min(100%, 480px);
   height: auto;
   border: 1px solid rgb(244 239 230 / 0.12);
   filter: drop-shadow(0 0 18px rgb(62 207 191 / 0.12));
@@ -392,6 +392,46 @@ body {
 
 .stream-readout a {
   color: #e36a2c;
+}
+
+.stream-readout .stream-subhead {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.stream-readout .stream-hint {
+  display: block;
+  margin-top: 0.15rem;
+  color: rgb(244 239 230 / 0.55);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.stream-readout .stream-frame-json {
+  margin: 0.4rem 0 0;
+  max-height: 14rem;
+  overflow: auto;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgb(244 239 230 / 0.18);
+  background: #0e0c0a;
+  color: #f4efe6;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.stream-readout .stream-howto {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+  color: rgb(244 239 230 / 0.82);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.stream-readout .stream-howto li + li {
+  margin-top: 0.35rem;
 }
 
 .stream-pill {

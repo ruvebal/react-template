@@ -11,6 +11,7 @@ import useDeviceStream from '../streamfield/useDeviceStream.js';
  */
 export default function Ex6Streamfield() {
   const [source, setSource] = useState('msw');
+  const [showAura, setShowAura] = useState(false);
   const [mockState, setMockState] = useState({ ready: false, error: null });
 
   useEffect(() => {
@@ -53,10 +54,10 @@ export default function Ex6Streamfield() {
   return (
     <main className="stage streamfield-stage">
       <div className="stage-canvas streamfield-canvas">
-        <StreamAura data={data} status={status} />
+        {showAura ? <StreamAura data={data} status={status} /> : null}
         <div className="streamfield-svg-layer">
-          <RisField data={data} status={status} history={history} />
           <StreamContinuum data={data} status={status} history={history} />
+          <RisField data={data} status={status} history={history} />
         </div>
         {source === 'msw' && mockState.error ? (
           <p className="streamfield-banner" role="alert">
@@ -71,6 +72,8 @@ export default function Ex6Streamfield() {
         lastMessageAt={lastMessageAt}
         source={source}
         onSourceChange={setSource}
+        showAura={showAura}
+        onShowAuraChange={setShowAura}
       />
     </main>
   );

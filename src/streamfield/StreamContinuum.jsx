@@ -158,7 +158,7 @@ export default function StreamContinuum({ history, status, data }) {
         fontFamily="ui-monospace, monospace"
         fontSize="9"
       >
-        continuum · stroke-dash flow
+        continuum — temperature over time
         {humidity != null ? ` · rh ${humidity}%` : ''}
       </text>
       <text
@@ -170,7 +170,7 @@ export default function StreamContinuum({ history, status, data }) {
         fontFamily="ui-monospace, monospace"
         fontSize="9"
       >
-        past → now
+        past → now (history ring)
       </text>
     </svg>
   );
