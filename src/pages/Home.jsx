@@ -11,8 +11,8 @@ export default function Home() {
       <h1>FE II Units 8–10 and satellites — exercises</h1>
       <p>
         Instructor demonstration. Pick an exercise. Ex1–Ex2 are the beacon (Units 8–9); Ex3–Ex5
-        are the album-cover satellites; Ex6 is the Unit 10 Streamfield (WebSocket frames → continuum +
-        RIS; optional aura). Defend your own mesh tree, shader, sleeve, and stream lifecycle on the
+        are the album-cover satellites; Ex6 is the Unit 10 Streamfield (snapshot frames on Pages;
+        delta flow only with the local server). Defend your own mesh tree, shader, sleeve, and stream lifecycle on the
         team hand-in — do not ship this paste unchanged.
       </p>
       <ol className="exercise-list">

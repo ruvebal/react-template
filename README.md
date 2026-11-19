@@ -1,6 +1,6 @@
-# react-template — FE II Units 8–9 (Beacon) and the album-cover satellites
+# react-template — FE II Units 8–10 (Beacon, album-cover satellites, Streamfield)
 
-Instructor demonstration for [Unit 8: R3F fundamentals](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-8-r3f-fundamentals/) and [Unit 9: Shader literacy](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-9-shader-literacy/), plus the running reference for the Bloque 5 satellites [Cover shaders](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/cover-shaders/) and [KTX2 / Basis](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/ktx2-basis/). Team hand-in: [Units 8–9 assignment](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/units-8-9-assignment/).
+Instructor demonstration for [Unit 8: R3F fundamentals](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-8-r3f-fundamentals/) and [Unit 9: Shader literacy](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-9-shader-literacy/), plus the running reference for the Bloque 5 satellites [Cover shaders](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/cover-shaders/) and [KTX2 / Basis](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/ktx2-basis/). [Unit 10](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/) is the Streamfield: snapshot frames on GitHub Pages, and a delta stream that needs [server/delta-stream.mjs](server/delta-stream.mjs) on your machine. Team hand-in for the 3D slice: [Units 8–9 assignment](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/units-8-9-assignment/).
 
 Routed sandbox: `/` indexes the exercises; each example is its own page. Students add pages — they do not replace `App.jsx` per lab.
 
@@ -14,6 +14,7 @@ Routed sandbox: `/` indexes the exercises; each example is its own page. Student
 | `/ex3-cover` | The beacon forked into a cover: stage, sleeve, vinyl. Flat sleeve, no shader, no texture | Unit 8 — Lab, *From beacon to sleeve* |
 | `/ex4-cover-shader` | Same cover; the sleeve samples a canvas picture at `vUv` and sweeps one sheen | Cover shaders |
 | `/ex5-ktx2` | PNG / ETC1S / UASTC switch: file bytes (suitcase) vs computed GPU bytes (room), `texture.format`, `colorSpace` | KTX2 / Basis |
+| `/ex6-streamfield` | WebSocket snapshots (MSW, works on Pages) and a delta stream (local server only) | [Unit 10](https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/#flagship-sandbox--streamfield) |
 | `*` | Redirects to `/` | — |
 
 Every exercise route has a collapsed **Focus** strip under the nav: *Look at* (the file and lines that carry the idea), *Change* (one safe experiment), *Measure / explain* (what you must be able to produce), each linked to its lesson section. The notes live in `src/focus.js`.
@@ -29,6 +30,7 @@ Version `1.1.0` — beacon (Units 8–9) unchanged; cover satellites Ex3–Ex5 a
 | `@react-three/fiber` | `9.8.2` |
 | `@react-three/drei` | `10.7.9` |
 | `react-router-dom` | `7.18.5` |
+| `ws` — delta server only, not part of the Pages bundle | `8.23.0` (checked 2026-11-19) |
 | KTX-Software (`toktx`, `ktx`) — encode only, not a runtime dependency | `4.4.2` |
 
 `fiber@9.7.0` peers `react` below 19.3; React 19.3.1 does not install with that fiber pin.
@@ -66,6 +68,8 @@ The numbers Ex5 shows (file bytes, GPU bytes, `texture.format`) belong to the ma
 
 **`/ex5-ktx2` — KTX2 / Basis.** Open `src/cover/gpuBytes.js` (how the room is computed), `src/cover/sleevePictureKtx2.js` (transcoder path + `detectSupport`) and `scripts/encode-ex5.sh` (the two traps as flags). Flip the switch and write, per mode: file bytes, GPU bytes, `texture.format`, the `colorSpace` check, and whether `uv 0,0` sits bottom-left. The texture count stays 2 in every mode — it is a count, not bytes.
 
+**`/ex6-streamfield` — Unit 10.** Open `src/streamfield/useDeviceStream.js` (connect, reconnect, close) and `src/streamfield/reduce.js` (how a delta folds into the last frame). The MSW handler in `src/streamfield/handlers.js` sends a full snapshot every second, which is why the published page moves: the service worker runs in the browser. GitHub Pages cannot run `server/delta-stream.mjs`. For the delta radio: `npm run delta-server` in one terminal, `npm run dev` in another, then open `http://localhost:5173/ex6-streamfield`. The published HTTPS site will keep that radio disconnected.
+
 ## Layout
 
 ```
@@ -84,6 +88,8 @@ src/
     Ex3Cover.jsx           Unit 8 lab — cover fork
     Ex4CoverShader.jsx     cover-shaders
     Ex5Ktx2.jsx            ktx2-basis — PNG / ETC1S / UASTC switch
+    Ex6Streamfield.jsx     Unit 10 — snapshot mock or local delta server
+  streamfield/             Unit 10 WebSocket client, MSW snapshot clock, delta fold
   Beacon.jsx               mesh tree (`useShader` toggles the bulb)
   BulbMaterial.jsx         Unit 9 rim shader
   BudgetProbe.jsx          once-per-second renderer.info sample (shared by every page)
@@ -108,6 +114,8 @@ public/
 scripts/
   ex5-sleeve.svg           original Ex5 sleeve art
   encode-ex5.sh            rebuilds public/ex5 (and public/basis with --transcoder)
+server/
+  delta-stream.mjs         Unit 10 delta clock — local process, not GitHub Pages
 .github/workflows/pages.yml  GitHub Pages build + deploy
 docs/
   renderer-info.md
@@ -143,4 +151,6 @@ Locally nothing changes: without `BASE_PATH` the base is `/`. To check a Pages b
 | `npm run build` | production bundle (`BASE_PATH=/react-template/` for Pages) |
 | `npm run preview` | serve `dist/` |
 | `npm run lint` | ESLint |
+| `npm run delta-server` | local delta WebSocket on `127.0.0.1:8001` (Unit 10). Pages cannot run this |
+| `npm test` | `applyFrame` sequence rules |
 | `scripts/encode-ex5.sh` | redraw + re-encode the Ex5 sleeve (toktx 4.4.2) |

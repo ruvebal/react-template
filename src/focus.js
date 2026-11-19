@@ -103,12 +103,12 @@ export const FOCUS = {
       href: `${U10}#flagship-sandbox--streamfield`,
     },
     change: {
-      text: 'Aura off. Toggle MSW ↔ live FastAPI, then kill the source: continuum gaps while status → reconnecting.',
-      href: `${U10}#file-map--every-participant`,
+      text: 'Aura off. MSW snapshots run on GitHub Pages. The delta server does not: start server/delta-stream.mjs from npm run dev and watch the wire patch fold into the frame.',
+      href: `${U10}#continuous-flow--delta-streaming`,
     },
     measure: {
-      text: 'Name each streamfield file’s job; trust SVG + readout over aura (Round-4 ownership).',
-      href: `${U10}#how-to-read-the-graphics-in-order`,
+      text: 'Name each streamfield file’s job, including server/delta-stream.mjs (the process Pages cannot run). Trust SVG + readout over aura.',
+      href: `${U10}#file-map--every-participant`,
     },
   },
 };

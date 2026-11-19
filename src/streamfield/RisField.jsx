@@ -11,6 +11,9 @@ const HISTORY_SPAN = 48;
  * Inline SVG owns the operational reading (accessible, inspectable paths).
  * Temperature → polar radius; humidity → ring opacity; sequence → ripple phase.
  * Trail uses the same Catmull–Rom ribbon as StreamContinuum (fluid, not jagged).
+ *
+ * Lesson — Unit 10, How to read the graphics, in order:
+ * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/#how-to-read-the-graphics-in-order
  */
 export default function RisField({ data, status, history, reducedMotion }) {
   const prefersReduced = usePrefersReducedMotion();

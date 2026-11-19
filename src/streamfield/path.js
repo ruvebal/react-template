@@ -3,6 +3,9 @@
  * reads as one continuous ribbon — the visual metaphor for a duplex stream.
  *
  * SVG master bridge: animate/inspect the path DOM; do not hand continuity to WebGL.
+ *
+ * Lesson — Unit 10, File map:
+ * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/#file-map--every-participant
  */
 export function catmullRomPath(points) {
   if (!points || points.length < 2) return '';

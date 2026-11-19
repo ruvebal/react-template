@@ -448,7 +448,8 @@ body {
 }
 
 .stream-pill--reconnecting,
-.stream-pill--connecting {
+.stream-pill--connecting,
+.stream-pill--resync {
   border-color: #e36a2c;
   color: #e36a2c;
 }

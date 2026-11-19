@@ -10,6 +10,8 @@ const BASE_Y = H - PAD_Y;
 
 /**
  * Stream Continuum — time-domain SVG ribbon for duplex continuity.
+ * Lesson — Unit 10, How to read the graphics, in order:
+ * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/#how-to-read-the-graphics-in-order
  *
  * Pedagogy (SVG master session):
  *   - Inline path owns the reading (inspectable `d`)

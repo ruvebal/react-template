@@ -7,6 +7,9 @@ import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion.js';
  * Decorative WebGL depth behind the SVG RIS.
  * Does NOT own the data semantics — SVG does. Round-4 lesson bridge:
  * renderer ≠ scene model; here WebGL is atmosphere only.
+ *
+ * Lesson — Unit 10, How to read the graphics, in order:
+ * https://ruvebal.github.io/web-atelier-udit/lessons/en/feii/unit-10-iot-python-backend/#how-to-read-the-graphics-in-order
  */
 function PulseRing({ temperature = 21, live, reduced }) {
   const mesh = useRef(null);
